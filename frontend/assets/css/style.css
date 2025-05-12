@@ -1,0 +1,263 @@
+/* Reset global */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+  
+body {
+    font-family: 'EB Garamond', serif; /* Fonte Old Style Serif */
+    background-color: #f5f7fa;
+    color: #1c1c1c;
+    overflow-x: hidden; /* Evita barra de rolagem horizontal durante a animação */
+}
+
+/* Animação de slide */
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%); /* Começa fora da tela à esquerda */
+        opacity: 0; /* Invisível no início */
+    }
+    to {
+        transform: translateX(0); /* Termina na posição original */
+        opacity: 1; /* Totalmente visível */
+    }
+}
+
+/* Container principal */
+.header-container {
+    width: 100%; /* Ocupa toda a largura */
+    text-align: center;
+    margin-bottom: 0; /* Remove o espaçamento inferior */
+    background-color: #1c2e4a; 
+    color: white; 
+    padding: 2vh; 
+    animation: slideIn 1s ease-out; /* Aplica a animação de slide */
+}
+
+/* Menu */
+.menu-container {
+    display: flex;
+    justify-content: space-between; /* Espaça os itens entre as extremidades */
+    align-items: center; /* Centraliza os itens verticalmente */
+    padding: 1vh 2vw;
+    background-color: #061938;
+    color: white;
+    margin-top: 0; /* Remove o espaçamento superior */
+    width: 100%; /* Ocupa toda a largura */
+    animation: slideIn 1s ease-out; /* Aplica a mesma animação de slide */
+}
+
+/* Formulário */
+#grafico9 form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh; /* Espaçamento entre os elementos */
+    padding: 2vh; /* Espaçamento interno */
+    background-color: white;
+    border-radius: 0.5vw; /* Bordas levemente arredondadas */
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1); /* Sombra leve */
+    animation: slideIn 1s ease-out; /* Animação de slide */
+}
+
+/* Inputs e caixas de seleção */
+#grafico9 input, #grafico9 select {
+    padding: 0.8vh; /* Espaçamento interno */
+    font-size: 1rem; /* Tamanho do texto */
+    border: 1px solid #ccc;
+    border-radius: 0.5vw; /* Bordas levemente arredondadas */
+    box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1); /* Sombra leve */
+}
+
+/* Botão de submissão */
+#grafico9 button {
+    background-color: #007bff; /* Azul */
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    padding: 1vh; /* Espaçamento interno */
+    font-size: 1rem; /* Tamanho do texto */
+    border-radius: 0.5vw; /* Bordas levemente arredondadas */
+    box-shadow: 0 0.3vw 0.6vw rgba(0, 0, 0, 0.2); /* Sombra para o efeito 3D */
+    transform: translateZ(0.3vw); /* Efeito 3D */
+    transition: all 0.3s ease; /* Transição suave */
+    animation: slideIn 1s ease-out; /* Animação de slide */
+}
+
+/* Efeito de hover no botão */
+#grafico9 button:hover {
+    background-color: #0056b3; /* Azul mais escuro */
+    box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
+    transform: translateZ(0.5vw); /* Aumenta o efeito 3D */
+}
+
+/* Container do gráfico */
+.chart-box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    border-radius: 0.5vw; /* Bordas levemente arredondadas */
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1); /* Sombra leve */
+    padding: 1rem;
+    height: auto; /* Altura ajustável automaticamente */
+    width: auto; /* Largura ajustável automaticamente */
+    transition: all 0.3s ease; /* Transição suave para mudanças */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
+}
+
+/* Efeito de expansão e 3D ao passar o mouse */
+.chart-box:hover {
+    transform: scale(1.1) rotateX(5deg) rotateY(5deg); /* Expande e aplica rotação 3D */
+    box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
+}
+
+/* Canvas do gráfico */
+canvas {
+    width: 100% !important; /* Garante que o canvas ocupe 100% da largura do container */
+    height: 100% !important; /* Garante que o canvas ocupe 100% da altura do container */
+    max-width: 100%; /* Limita a largura máxima ao tamanho do container */
+    max-height: 100%; /* Limita a altura máxima ao tamanho do container */
+}
+
+/* Ícone do menu */
+.icon-menu {
+    font-size: 2rem;
+    margin-right: 1vw; /* Espaçamento entre o ícone e o menu */
+}
+
+/* Opções do menu */
+.menu-options {
+    display: flex;
+    justify-content: center; /* Centraliza as palavras horizontalmente */
+    gap: 3vw; /* Espaçamento entre os itens */
+    font-size: 1rem;
+    flex-grow: 1; /* Faz com que as opções ocupem o espaço restante */
+}
+
+/* Gráficos */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Três colunas */
+    grid-template-rows: repeat(2, 1fr); /* Duas linhas */
+    gap: 2vw; /* Espaçamento entre os containers */
+    padding: 2vw; /* Espaçamento interno do grid */
+}
+
+/* Formulário */
+#grafico6 form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5vh;
+    padding: 2vh;
+    background-color: white;
+    border-radius: 0.5vw;
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1);
+}
+
+#grafico6 input, #grafico6 select, #grafico6 button {
+    padding: 0.8vh;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 0.5vw;
+    box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
+}
+
+#grafico6 button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 0 0.3vw 0.6vw rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+#grafico6 button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.3);
+}
+
+/* Estilo do container da tabela com rolagem */
+#grafico5 {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: white;
+    border-radius: 0.5vw;
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+    height: 45vh; /* Altura fixa do container */
+    width: 100%; /* Largura total */
+    overflow-y: auto; /* Adiciona barra de rolagem vertical */
+    overflow-x: hidden; /* Remove barra de rolagem horizontal */
+}
+
+/* Estilo da tabela */
+#historicoTabela {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 1rem;
+}
+
+#historicoTabela th, #historicoTabela td {
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+}
+
+#historicoTabela th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    position: sticky; /* Mantém o cabeçalho fixo durante a rolagem */
+    top: 0;
+    z-index: 1;
+}
+
+#historicoTabela tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#historicoTabela tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Estilo para os tipos */
+.tipo-ganho {
+    color: green;
+    font-weight: bold;
+}
+
+.tipo-gasto {
+    color: red;
+    font-weight: bold;
+}
+
+.tipo-investimento {
+    color: blue;
+    font-weight: bold;
+}
+
+/* Estilo do ícone da lixeira */
+.icone-lixeira {
+    color: red;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: transform 0.2s ease;
+}
+
+.icone-lixeira:hover {
+    transform: scale(1.2);
+}
+
+/* Estilo do título do histórico */
+.titulo-historico {
+    text-align: center; /* Centraliza o texto */
+    font-size: 1.5rem; /* Tamanho da fonte */
+    font-weight: bold; /* Deixa o texto em negrito */
+    color: #6c757d; /* Cinza */
+    margin-bottom: 1rem; /* Espaçamento inferior */
+    border-bottom: 2px solid #e5e5e5; /* Linha abaixo do título */
+    padding-bottom: 0.5rem; /* Espaçamento interno inferior */
+}

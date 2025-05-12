@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meu Painel Financeiro</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+</head>
+<body>
+  <!-- Container Principal -->
+  <div class="header-container">
+    <h1>Meu Painel Financeiro</h1>
+  </div>
+
+  <!-- Container Menor -->
+  <div class="menu-container">
+    <span class="material-icons icon-menu">menu</span>
+    <div class="menu-options">
+      <span>Meus gastos</span>
+      <span>Meus ganhos</span>
+      <span>Meus investimentos</span>
+    </div>
+  </div>
+
+  <!-- Grid dos Gráficos -->
+  <div class="charts-grid">
+    <!-- Container do gráfico de ganhos -->
+    <div class="chart-box" id="grafico1">
+      <canvas id="grafico-ganhos"></canvas>
+    </div>
+
+    <!-- Container do gráfico de gastos -->
+    <div class="chart-box" id="grafico2">
+      <canvas id="grafico-gastos"></canvas>
+    </div>
+
+    <!-- Container do gráfico de investimentos -->
+    <div class="chart-box" id="grafico3">
+      <canvas id="grafico-investimentos"></canvas>
+    </div>
+
+    <!-- Container do gráfico de diferença entre ganhos e gastos -->
+    <div class="chart-box" id="grafico4">
+      <canvas id="grafico-ganho-gasto"></canvas>
+    </div>
+
+    <!-- Container do histórico de valores -->
+    <div class="chart-box" id="grafico5">
+      <h3 class="titulo-historico">Histórico de Iterações</h3> <!-- Adicionado classe para estilização -->
+      <table id="historicoTabela">
+        <thead>
+          <tr>
+            <th>Valor</th>
+            <th>Tipo</th>
+            <th>Data</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Linhas da tabela serão adicionadas dinamicamente -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Formulário para adicionar dados -->
+    <div class="chart-box" id="grafico6">
+      <form id="dadosForm">
+        <h3>Adicionar Receita</h3>
+        <label for="valor">Digite o valor:</label>
+        <input type="number" id="valor" name="valor" step="0.01" min="0" placeholder="Valor" required>
+
+        <label for="semana">Digite a semana:</label>
+        <input type="number" id="semana" name="semana" min="1" placeholder="Semana" required>
+
+        <label for="tipo">Selecione o tipo:</label>
+        <select id="tipo" name="tipo" required>
+          <option value="ganhos">Ganhos</option>
+          <option value="gastos">Gastos</option>
+          <option value="investimentos">Investimentos</option>
+        </select>
+
+        <div id="erroMsg" style="color: red;"></div>
+        <button type="submit" id="submitButton">Enviar</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/main.js"></script>
+</body>
+</html>
