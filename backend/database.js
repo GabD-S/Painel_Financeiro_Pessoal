@@ -3,22 +3,34 @@ const db = new sqlite3.Database("db.sqlite");
 
 // cria tabelas se não existirem
 db.serialize(() => {
-  db.run(`create table if not exists ganhos (
-    id integer primary key autoincrement,
-    valor real not null,
-    semana integer not null
+  db.run(`CREATE TABLE IF NOT EXISTS ganhos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    valor REAL NOT NULL,
+    semana INTEGER NOT NULL
   )`);
 
-  db.run(`create table if not exists gastos (
-    id integer primary key autoincrement,
-    valor real not null,
-    semana integer not null
+  db.run(`CREATE TABLE IF NOT EXISTS gastos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    valor REAL NOT NULL,
+    semana INTEGER NOT NULL
   )`);
 
-  db.run(`create table if not exists investimentos (
-    id integer primary key autoincrement,
-    valor real not null,
-    semana integer not null
+  db.run(`CREATE TABLE IF NOT EXISTS novos_gastos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    preco REAL NOT NULL,
+    tipo TEXT NOT NULL
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS novos_ganhos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    valor REAL NOT NULL,
+    tipo TEXT NOT NULL
+  )`);
+
+  db.run(`CREATE TABLE IF NOT EXISTS investimentos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    valor REAL NOT NULL,
+    semana INTEGER NOT NULL
   )`);
 });
 
