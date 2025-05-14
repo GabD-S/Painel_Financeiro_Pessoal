@@ -131,9 +131,28 @@ canvas {
 .menu-options {
     display: flex;
     justify-content: center; /* Centraliza as palavras horizontalmente */
-    gap: 3vw; /* Espaçamento entre os itens */
+    gap: 2rem; /* Espaçamento entre os links */
     font-size: 1rem;
     flex-grow: 1; /* Faz com que as opções ocupem o espaço restante */
+}
+
+/* Estilo para os links do menu */
+.menu-link {
+    font-size: 2rem; /* Aumenta o tamanho do texto */
+    font-weight: bold;
+    color: #ffffff; /* Cor branca */
+    text-decoration: none; /* Remove o sublinhado */
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
+    display: inline-block; /* Garante que o efeito funcione corretamente */
+    padding: 0.5rem 1rem; /* Adiciona espaçamento interno */
+    border-radius: 0.5rem; /* Bordas arredondadas */
+}
+
+/* Efeito de flutuar em 3D ao passar o mouse */
+.menu-link:hover {
+    transform: scale(1.2) rotateX(10deg) rotateY(10deg); /* Aumenta e aplica rotação 3D */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3); /* Adiciona sombra */
+    background-color: rgba(255, 255, 255, 0.1); /* Fundo levemente transparente */
 }
 
 /* Gráficos */

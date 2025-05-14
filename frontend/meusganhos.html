@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Meus Ganhos</title>
+  <link rel="stylesheet" href="assets/css/ganhos.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <!-- Cabeçalho -->
+  <header class="header-container">
+    <h1>Meus Ganhos</h1>
+  </header>
+
+  <!-- Grid dos Gráficos -->
+  <div class="charts-grid">
+    <!-- Gráfico em pizza -->
+    <div class="chart-box">
+      <canvas id="pizzaGanhos"></canvas>
+    </div>
+
+    <!-- Gráfico de ganhos -->
+    <div class="chart-box">
+      <canvas id="grafico-ganhos"></canvas>
+    </div>
+
+    <!-- Gráfico de diferença entre ganhos e gastos -->
+    <div class="chart-box">
+      <canvas id="grafico-ganho-gasto"></canvas>
+    </div>
+
+    <!-- Formulário para adicionar informações -->
+    <div class="chart-box">
+      <form id="formGanho">
+        <label for="valor">Valor do Ganho:</label>
+        <input type="number" step="0.01" id="valor" required>
+
+        <label for="tipo">Tipo (ex: salário, bônus...):</label>
+        <input type="text" id="tipo" placeholder="Não classificado">
+
+        <button type="submit">Adicionar Ganho</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/ganhos.js"></script>
+</body>
+</html>

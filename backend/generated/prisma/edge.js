@@ -107,7 +107,7 @@ const config = {
       "value": "prisma-client-js"
     },
     "output": {
-      "value": "/home/gabriel_pc/Testes/webdevolper/meu_portifolipt2/backend/generated/prisma",
+      "value": "/home/gabriel_pc/Testes/webdevolper/meu-portifolio/backend/generated/prisma",
       "fromEnvVar": null
     },
     "config": {
@@ -121,7 +121,7 @@ const config = {
       }
     ],
     "previewFeatures": [],
-    "sourceFilePath": "/home/gabriel_pc/Testes/webdevolper/meu_portifolipt2/backend/prisma/schema.prisma",
+    "sourceFilePath": "/home/gabriel_pc/Testes/webdevolper/meu-portifolio/backend/prisma/schema.prisma",
     "isCustomOutput": true
   },
   "relativeEnvPaths": {
