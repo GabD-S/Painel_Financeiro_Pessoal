@@ -1,0 +1,18 @@
+Arquivos criado
+
+# Navegue até a pasta backend
+cd meu-portfolio/backend
+
+# Criar arquivos do backend
+touch controllers/investimentosController.js
+touch services/investimentosService.js
+touch routes/investimentos.js
+touch routes/investimentosRoutes.js
+
+# Voltar e ir para o frontend
+cd ../frontend
+
+# Criar arquivos do frontend
+touch assets/css/investimentos.css
+touch assets/js/investimentos.js
+touch meusinvestimentos.html

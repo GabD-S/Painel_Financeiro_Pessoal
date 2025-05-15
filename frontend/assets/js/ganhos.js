@@ -1,59 +1,29 @@
-document.getElementById('formGanho').addEventListener('submit', async function(e) {
-  e.preventDefault();
-  const valor = parseFloat(document.getElementById('valor').value);
-  const tipo = document.getElementById('tipo').value || 'Não classificado';
+document.addEventListener('DOMContentLoaded', () => {
+  const formGanho = document.getElementById('formGanho');
+  if (formGanho) {
+    formGanho.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const valor = parseFloat(document.getElementById('valor').value);
+      const tipo = document.getElementById('tipo').value || 'Não classificado';
 
-  await fetch('/api/novos_ganhos', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ valor, tipo })
-  });
+      await fetch('/api/novos_ganhos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ valor, tipo })
+      });
 
-  document.getElementById('valor').value = '';
-  document.getElementById('tipo').value = '';
-  carregarGanhosPizza();
+      document.getElementById('valor').value = '';
+      document.getElementById('tipo').value = '';
+      carregarDadosGanhos();
+      carregarDadosGanhoGasto();
+    });
+  } else {
+    console.error("Elemento com ID 'formGanho' não encontrado.");
+  }
+
   carregarDadosGanhos();
   carregarDadosGanhoGasto();
 });
-
-async function carregarGanhosPizza() {
-  const res = await fetch('/api/novos_ganhos');
-  const dados = await res.json();
-
-  const tipos = {};
-  dados.forEach(g => {
-    tipos[g.tipo] = (tipos[g.tipo] || 0) + g.valor;
-  });
-
-  const ctx = document.getElementById('pizzaGanhos').getContext('2d');
-  if (window.pizzaGanhosChart) window.pizzaGanhosChart.destroy();
-  window.pizzaGanhosChart = new Chart(ctx, {
-    type: 'pie',
-    data: {
-      labels: Object.keys(tipos),
-      datasets: [{
-        data: Object.values(tipos),
-        backgroundColor: ['#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b'],
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'bottom'
-        },
-        title: {
-          display: true,
-          text: 'Descrição dos Ganhos',
-          font: {
-            size: 18,
-            weight: 'bold'
-          }
-        }
-      }
-    }
-  });
-}
 
 async function carregarDadosGanhos() {
   const res = await fetch('/api/ganhos');
@@ -138,9 +108,3 @@ async function carregarDadosGanhoGasto() {
     }
   });
 }
-
-window.onload = async () => {
-  await carregarGanhosPizza();
-  await carregarDadosGanhos();
-  await carregarDadosGanhoGasto();
-};

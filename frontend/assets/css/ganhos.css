@@ -28,33 +28,50 @@ body {
     font-weight: bold;
 }
 
+/* Container principal dos gráficos */
+.charts-container {
+    display: flex;
+    justify-content: space-between; /* Espaça os gráficos horizontalmente */
+    align-items: center; /* Centraliza os gráficos verticalmente */
+    gap: 2rem; /* Espaçamento entre os gráficos */
+    height: 100vh; /* Altura total da página */
+    padding: 2rem; /* Espaçamento interno do container */
+}
+
 /* Grid de gráficos */
 .charts-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2vw;
-    padding: 2vw;
+    grid-template-columns: 1fr 1fr; /* Duas colunas de tamanho igual */
+    gap: 0; /* Remove o espaçamento entre os gráficos */
+    height: 100vh; /* Altura total da página */
 }
 
-/* Container do gráfico */
+/* Estilo dos containers individuais dos gráficos */
 .chart-box {
+    flex: 1; /* Faz com que os gráficos ocupem o mesmo espaço */
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     background-color: white;
-    border-radius: 0.5vw;
-    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    height: auto;
-    width: 100%;
-    transition: all 0.3s ease;
-    animation: slideInFromCenter 1s ease-out;
+    border-radius: 0.5rem; /* Bordas arredondadas */
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1); /* Sombra leve */
+    padding: 1rem; /* Espaçamento interno */
+    height: 65%;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
 }
 
+/* Efeito de flutuar em 3D ao passar o mouse */
 .chart-box:hover {
-    transform: scale(1.05);
-    box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.3);
+    transform: scale(1.05) rotateX(5deg) rotateY(5deg); /* Expande e aplica rotação 3D */
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
+}
+
+/* Canvas do gráfico */
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 /* Formulário */
