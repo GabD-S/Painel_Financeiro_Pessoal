@@ -1,3 +1,6 @@
+require('dotenv').config();
+const app = require("./app");
+
 //essa buceta tem um problema dependendo de qual requisição voce chama primeiro funciona somente ela
 // soluções pensados: mudar a tabela de forma a fundir novos_gastos e gastos, e requerir diferentes coisas para os graficos
 //fazer uma condicional que desliga uma enquanto liga a outra
@@ -7,7 +10,6 @@ const cors = require("cors");
 const path = require("path");
 const db = require("./database");
 
-const app = express();
 app.use(cors());
 app.use(express.json());
 
@@ -16,7 +18,6 @@ app.use(express.static(path.join(__dirname, "../frontend")));
 
 // Lista de tipos válidos
 const tiposValidos = ["ganhos", "gastos", "investimentos"];
-
 
 // Inserir novos gastos no banco
 app.post("/api/gastos", (req, res) => {
@@ -35,7 +36,6 @@ app.post("/api/gastos", (req, res) => {
     res.status(201).json({ id: this.lastID });
   });
 });
-
 
 // Inserir valor no banco
 app.post("/api/:tipo", (req, res) => {
@@ -60,7 +60,6 @@ app.post("/api/:tipo", (req, res) => {
   });
 });
 
-
 // Obter valores agrupados por semana para gastos
 app.get("/api/gastos", (req, res) => {
   const query = `SELECT tipo, SUM(preco) AS total FROM novos_gastos GROUP BY tipo ORDER BY tipo`;
@@ -73,7 +72,6 @@ app.get("/api/gastos", (req, res) => {
   });
 });
 
-
 // Rota para obter o histórico de gastos
 app.get("/api/novos_gastos", (req, res) => {
   const query = `SELECT id, preco, tipo FROM novos_gastos ORDER BY id DESC`;
@@ -85,7 +83,6 @@ app.get("/api/novos_gastos", (req, res) => {
     res.json(rows);
   });
 });
-
 
 // Obter valores agrupados por semana
 app.get("/api/:tipo", (req, res) => {
@@ -134,8 +131,9 @@ app.delete('/api/novos_gastos/:id', (req, res) => {
   });
 });
 
-// Inicia o servidor
-const PORT = 3000;
+// Configuração da porta e inicialização do servidor
+const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });

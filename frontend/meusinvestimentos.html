@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meus Investimentos</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/investimentos.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1><i class="fas fa-chart-line"></i> Investimentos</h1>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="dashboard">
+            <!-- Painel esquerdo - Compras de BTC -->
+            <section class="panel panel-btc">
+                <div class="panel-header">
+                    <h2>Compras de BTC</h2>
+                    <button id="btn-add-btc" class="btn-add" title="Adicionar compra de BTC">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table id="table-btc" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Quantidade</th>
+                                <th>Preço de Compra ($)</th>
+                                <th>Valor Atual ($)</th>
+                                <th>Margem de Lucro (%)</th>
+                                <th>Lucro/Prejuízo ($)</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados serão inseridos pelo JavaScript -->
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="2"><strong>Total</strong></td>
+                                <td id="total-investido">$0.00</td>
+                                <td id="total-atual">$0.00</td>
+                                <td id="margem-media">0.00%</td>
+                                <td id="lucro-total">$0.00</td>
+                                <td></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Painel central - Gráfico de pizza -->
+            <section class="panel panel-chart">
+                <div class="panel-header">
+                    <h2>Distribuição de Investimentos</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="investment-chart"></canvas>
+                </div>
+                <div class="chart-legend">
+                    <div class="legend-item">
+                        <span class="color-box" style="background-color: #3498db;"></span>
+                        <span>Bitcoin</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="color-box" style="background-color: #2ecc71;"></span>
+                        <span>Ações</span>
+                    </div>
+                    <div class="legend-item">
+                        <span class="color-box" style="background-color: #f1c40f;"></span>
+                        <span>Outros</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Painel direito - Ações disponíveis -->
+            <section class="panel panel-stocks">
+                <div class="panel-header">
+                    <h2>Ações Disponíveis</h2>
+                    <div class="search-box">
+                        <input type="text" id="search-stocks" placeholder="Buscar ação...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="table-stocks" class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Ticker</th>
+                                <th>Empresa</th>
+                                <th>Preço ($)</th>
+                                <th>P/L</th>
+                                <th>Dividend Yield</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dados serão inseridos pelo JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal para adicionar compra de BTC -->
+    <div id="modal-btc" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Adicionar Compra de Bitcoin</h3>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <form id="form-btc">
+                    <div class="form-group">
+                        <label for="btc-date">Data da Compra</label>
+                        <input type="date" id="btc-date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="btc-quantity">Quantidade (BTC)</label>
+                        <input type="number" id="btc-quantity" step="0.00000001" min="0.00000001" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="btc-price">Preço de Compra (USD)</label>
+                        <input type="number" id="btc-price" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel">Cancelar</button>
+                        <button type="submit" class="btn-save">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/js/investimentos.js"></script>
+</body>
+</html>
