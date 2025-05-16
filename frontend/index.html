@@ -1,29 +1,64 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meu Painel Financeiro</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/theme.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
 <body>
+  <!-- Sidebar (Menu Lateral) -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>Configurações</h2>
+      <span class="material-icons close-sidebar">close</span>
+    </div>
+    <div class="sidebar-content">
+      <div class="sidebar-item">
+        <h3>Tema</h3>
+        <div class="theme-toggle">
+          <span>Tema Escuro</span>
+          <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="sidebar-item">
+        <h3>Navegação</h3>
+        <ul style="list-style: none; padding-left: 10px;">
+          <li style="margin-bottom: 10px;"><a href="meusgastos.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Meus Gastos</a></li>
+          <li style="margin-bottom: 10px;"><a href="meusganhos.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Meus Ganhos</a></li>
+          <li style="margin-bottom: 10px;"><a href="meusinvestimentos.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Meus Investimentos</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay para quando o menu lateral estiver aberto -->
+  <div class="overlay" id="overlay"></div>
+
   <!-- Container Principal -->
   <div class="header-container">
-    <h1>Painel Financeiro Pessoal</h1>
+    <h1 class="animate__animated animate__fadeInDown">Painel Financeiro Pessoal</h1>
   </div>
 
   <!-- Container Menor -->
   <div class="menu-container">
-    <span class="material-icons icon-menu">menu</span>
+    <span class="material-icons icon-menu" id="menuToggle">menu</span>
     <div class="menu-options">
-      <a href="meusgastos.html" class="menu-link">Meus Gastos</a>
-      <a href="meusganhos.html" class="menu-link">Meus Ganhos</a>
-      <a href="meusinvestimentos.html" class="menu-link">Meus Investimentos</a>
+      <a href="meusgastos.html" class="menu-link animate__animated animate__fadeInUp">Meus Gastos</a>
+      <a href="meusganhos.html" class="menu-link animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">Meus Ganhos</a>
+      <a href="meusinvestimentos.html" class="menu-link animate__animated animate__fadeInUp" style="animation-delay: 0.4s;">Meus Investimentos</a>
     </div>
+    <span class="material-icons settings-icon animate__animated animate__fadeInRight" id="settingsIcon">settings</span>
   </div>
 
   <!-- Grid dos Gráficos -->
@@ -50,7 +85,7 @@
 
     <!-- Container do histórico de valores -->
     <div class="chart-box" id="grafico5">
-      <h3 class="titulo-historico">Histórico de Iterações</h3> <!-- Adicionado classe para estilização -->
+      <h3 class="titulo-historico animate__animated animate__fadeIn">Histórico de Iterações</h3>
       <table id="historicoTabela">
         <thead>
           <tr>
@@ -69,7 +104,7 @@
     <!-- Formulário para adicionar dados -->
     <div class="chart-box" id="grafico6">
       <form id="dadosForm">
-        <h3>Adicionar Receita</h3>
+        <h3 class="animate__animated animate__fadeIn">Adicionar Receita</h3>
         <label for="valor">Digite o valor:</label>
         <input type="number" id="valor" name="valor" step="0.01" min="0" placeholder="Valor" required>
 
@@ -84,11 +119,12 @@
         </select>
 
         <div id="erroMsg" style="color: red;"></div>
-        <button type="submit" id="submitButton">Enviar</button>
+        <button type="submit" id="submitButton" class="animate__animated animate__pulse animate__infinite">Enviar</button>
       </form>
     </div>
   </div>
 
+  <script src="assets/js/theme.js"></script>
   <script src="assets/js/main.js"></script>
 </body>
 </html>

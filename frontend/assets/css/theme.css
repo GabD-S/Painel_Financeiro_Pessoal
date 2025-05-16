@@ -5,7 +5,7 @@
     box-sizing: border-box;
     transition: all 0.3s ease;
 }
-
+  
 body {
     font-family: 'Montserrat', sans-serif;
     background-color: #f5f7fa;
@@ -22,32 +22,51 @@ body.dark-theme {
 
 body.dark-theme .chart-box {
     background-color: #172a45;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 255, 0.2);
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 255, 0.2);
+}
+
+body.dark-theme .menu-container {
+    background-color: #061938;
 }
 
 body.dark-theme .header-container {
-    background: linear-gradient(135deg, #0d2146, #061938);
+    background-color: #0d2146;
 }
 
-body.dark-theme form {
+body.dark-theme #grafico5, 
+body.dark-theme #grafico6 form {
     background-color: #172a45;
 }
 
-body.dark-theme form label {
-    color: #e0e0e0;
+body.dark-theme #historicoTabela th {
+    background-color: #203354;
 }
 
-body.dark-theme form input {
+body.dark-theme #historicoTabela td {
+    border-color: #304b76;
+}
+
+body.dark-theme #historicoTabela tbody tr:nth-child(even) {
+    background-color: #142238;
+}
+
+body.dark-theme #historicoTabela tbody tr:hover {
+    background-color: #1f324e;
+}
+
+body.dark-theme .titulo-historico {
+    color: #a0b9db;
+    border-bottom-color: #304b76;
+}
+
+body.dark-theme input, 
+body.dark-theme select {
     background-color: #203354;
     color: #e0e0e0;
     border-color: #304b76;
 }
 
-body.dark-theme form button {
-    background: linear-gradient(135deg, #0d47a1, #1565c0);
-}
-
-/* Animações */
+/* Animações de texto e elementos */
 @keyframes glow {
     0% { text-shadow: 0 0 5px rgba(0, 123, 255, 0.7), 0 0 10px rgba(0, 123, 255, 0.5); }
     50% { text-shadow: 0 0 20px rgba(0, 123, 255, 0.9), 0 0 30px rgba(0, 123, 255, 0.7); }
@@ -60,7 +79,7 @@ body.dark-theme form button {
     100% { transform: translateY(0px); }
 }
 
-@keyframes slideInFromLeft {
+@keyframes slideIn {
     from {
         transform: translateX(-100%);
         opacity: 0;
@@ -81,23 +100,18 @@ body.dark-theme form button {
     to { transform: scale(1); opacity: 1; }
 }
 
-@keyframes rotateAnimation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Barra superior */
+/* Container principal */
 .header-container {
     width: 100%;
     text-align: center;
     margin-bottom: 0;
     background: linear-gradient(135deg, #1c2e4a, #0d47a1);
     color: white;
-    padding: 4vh;
-    animation: slideInFromLeft 1s ease-out;
+    padding: 3vh;
     position: relative;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    animation: slideIn 1s ease-out;
 }
 
 .header-container::before {
@@ -129,74 +143,106 @@ body.dark-theme form button {
     text-shadow: 0 0 15px rgba(100, 181, 246, 0.8);
 }
 
-/* Menu de navegação */
-.nav-container {
+/* Menu */
+.menu-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1.5vh 2vw;
     background: linear-gradient(to right, #061938, #0d47a1);
     color: white;
-    animation: slideInFromLeft 1.2s ease-out;
+    margin-top: 0;
+    width: 100%;
+    animation: slideIn 1.2s ease-out;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     z-index: 100;
 }
 
-.back-button {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-    font-size: 1.2rem;
-    transition: all 0.3s ease;
-}
-
-.back-button:hover {
-    transform: translateX(-5px);
-    color: #64b5f6;
-}
-
-.back-button .material-icons {
-    margin-right: 0.5rem;
-}
-
-.settings-icon {
-    font-size: 2rem;
+/* Ícone do menu */
+.icon-menu {
+    font-size: 2.5rem;
+    margin-right: 1vw;
     cursor: pointer;
-    transition: all 0.3s ease;
+    animation: scaleIn 1.5s ease;
+    transform-origin: center;
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.settings-icon:hover {
-    transform: rotate(90deg);
+.icon-menu:hover {
+    transform: scale(1.2) rotate(180deg);
     color: #64b5f6;
 }
 
-/* Container principal dos gráficos */
-.charts-container {
+/* Opções do menu */
+.menu-options {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: center;
     gap: 2rem;
-    height: calc(100vh - 250px);
-    padding: 2rem;
+    font-size: 1rem;
+    flex-grow: 1;
+}
+
+/* Estilo para os links do menu */
+.menu-link {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #ffffff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.menu-link:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    z-index: -1;
+}
+
+.menu-link:hover:before {
+    left: 0;
+}
+
+.menu-link:hover {
+    color: #64b5f6;
+    transform: translateY(-5px);
+    text-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* Gráficos */
+.charts-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 2vw;
+    padding: 2vw;
     animation: fadeIn 1.5s ease-out;
 }
 
-/* Estilo dos containers individuais dos gráficos */
+/* Container do gráfico */
 .chart-box {
-    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
     background-color: white;
     border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.1);
     padding: 1.5rem;
-    height: 100%;
-    position: relative;
+    height: auto;
+    width: auto;
     overflow: hidden;
+    transition: all 0.4s ease;
     animation: scaleIn 1s ease-out;
+    position: relative;
 }
 
 .chart-box::before {
@@ -219,7 +265,7 @@ body.dark-theme form button {
 
 .chart-box:hover {
     transform: translateY(-10px);
-    box-shadow: 0 1rem 2rem rgba(0, 123, 255, 0.3);
+    box-shadow: 0 1vw 2vw rgba(0, 123, 255, 0.3);
 }
 
 /* Canvas do gráfico */
@@ -368,105 +414,74 @@ input:checked + .slider:before {
     opacity: 1;
 }
 
-/* Formulário de ganho */
-.form-section {
-    padding: 2rem;
-    animation: fadeIn 1.5s ease-out;
-}
-
-.form-container {
-    max-width: 800px;
-    margin: 0 auto;
-    background-color: white;
-    border-radius: 1rem;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transform: translateY(0);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.form-container:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 1rem 2rem rgba(0, 123, 255, 0.3);
-}
-
-.form-header {
-    background: linear-gradient(135deg, #1c2e4a, #0d47a1);
-    color: white;
-    padding: 1.5rem;
-    text-align: center;
-}
-
-.form-header h2 {
-    font-size: 1.8rem;
-    animation: glow 3s infinite ease-in-out;
-}
-
-form {
+/* Formulário */
+#grafico6 form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1.5vh;
+    padding: 2vh;
     background-color: white;
-    padding: 2rem;
-    border-radius: 0;
-    align-items: center;
+    border-radius: 1rem;
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
 }
 
-form label {
-    font-weight: 600;
-    color: #333;
-    font-size: 1rem;
-    text-align: left;
-    width: 100%;
-    position: relative;
-    padding-left: 1.5rem;
-}
-
-form label::before {
-    content: '•';
-    position: absolute;
-    left: 0;
-    color: #0d47a1;
+#grafico6 h3 {
     font-size: 1.5rem;
-    line-height: 1;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #0d47a1;
+    font-weight: 600;
+    position: relative;
+    padding-bottom: 0.5rem;
 }
 
-form input {
-    padding: 1rem;
+#grafico6 h3::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 25%;
+    width: 50%;
+    height: 3px;
+    background: linear-gradient(to right, transparent, #0d47a1, transparent);
+}
+
+#grafico6 label {
+    font-weight: 500;
+    margin-bottom: -0.5vh;
+}
+
+#grafico6 input, #grafico6 select {
+    padding: 1vh;
     font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 0.5rem;
-    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1);
-    width: 100%;
-    max-width: 400px;
+    box-shadow: 0 0.1vw 0.3vw rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
 }
 
-form input:focus {
+#grafico6 input:focus, #grafico6 select:focus {
     border-color: #0d47a1;
-    box-shadow: 0 0.3rem 0.6rem rgba(0, 123, 255, 0.3);
+    box-shadow: 0 0 0 2px rgba(13, 71, 161, 0.25);
     outline: none;
 }
 
-form button {
+#grafico6 button {
     background: linear-gradient(135deg, #0d47a1, #1976d2);
     color: white;
     border: none;
-    padding: 1rem 2rem;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 0.5rem;
     cursor: pointer;
-    box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.2);
+    font-weight: bold;
+    padding: 1.2vh;
+    font-size: 1.1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0.3vw 0.6vw rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
-    width: 100%;
-    max-width: 200px;
-    text-align: center;
     position: relative;
     overflow: hidden;
 }
 
-form button::before {
+#grafico6 button::before {
     content: '';
     position: absolute;
     top: 0;
@@ -477,61 +492,189 @@ form button::before {
     transition: all 0.5s ease;
 }
 
-form button:hover::before {
+#grafico6 button:hover::before {
     left: 100%;
 }
 
-form button:hover {
+#grafico6 button:hover {
     background: linear-gradient(135deg, #1565c0, #1976d2);
     transform: translateY(-3px);
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0.5vw 1vw rgba(0, 0, 0, 0.3);
 }
 
-form button:active {
-    transform: scale(0.98);
-    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
+#grafico6 button:active {
+    transform: translateY(1px);
+}
+
+/* Estilo do container da tabela com rolagem */
+#grafico5 {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 1rem;
+    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    height: 45vh;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: thin;
+    scrollbar-color: #0d47a1 #f1f1f1;
+}
+
+#grafico5::-webkit-scrollbar {
+    width: 8px;
+}
+
+#grafico5::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#grafico5::-webkit-scrollbar-thumb {
+    background: #0d47a1;
+    border-radius: 10px;
+}
+
+#grafico5::-webkit-scrollbar-thumb:hover {
+    background: #064091;
+}
+
+/* Estilo da tabela */
+#historicoTabela {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 1rem;
+}
+
+#historicoTabela th, #historicoTabela td {
+    padding: 1rem;
+    border: 1px solid #ddd;
+}
+
+#historicoTabela th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+#historicoTabela tbody tr {
+    transition: all 0.2s ease;
+}
+
+#historicoTabela tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+#historicoTabela tbody tr:hover {
+    background-color: #e3f2fd;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilo para os tipos */
+.tipo-ganho {
+    color: #00a152;
+    font-weight: bold;
+}
+
+.tipo-gasto {
+    color: #d32f2f;
+    font-weight: bold;
+}
+
+.tipo-investimento {
+    color: #0d47a1;
+    font-weight: bold;
+}
+
+/* Estilo do ícone da lixeira */
+.icone-lixeira {
+    color: #d32f2f;
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: all 0.3s ease;
+}
+
+.icone-lixeira:hover {
+    transform: scale(1.2) rotate(15deg);
+    color: #b71c1c;
+}
+
+/* Estilo do título do histórico */
+.titulo-historico {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #0d47a1;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #e5e5e5;
+    padding-bottom: 0.8rem;
+    position: relative;
+}
+
+.titulo-historico::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 25%;
+    width: 50%;
+    height: 2px;
+    background: linear-gradient(to right, transparent, #0d47a1, transparent);
+}
+
+/* Configurações */
+.settings-icon {
+    font-size: 2rem;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: all 0.3s ease;
+}
+
+.settings-icon:hover {
+    transform: rotate(90deg);
+    color: #64b5f6;
 }
 
 /* Responsividade */
 @media (max-width: 1200px) {
-    .charts-container {
-        flex-direction: column;
-        height: auto;
-    }
-    
-    .chart-box {
-        width: 100%;
-        height: 300px;
-        margin-bottom: 1rem;
+    .charts-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
     
     .header-container h1 {
         font-size: 2.5rem;
     }
+    
+    .menu-link {
+        font-size: 1.2rem;
+    }
 }
 
 @media (max-width: 768px) {
-    .form-container {
-        width: 95%;
-    }
-    
-    form input {
-        max-width: 100%;
+    .charts-grid {
+        grid-template-columns: 1fr;
     }
     
     .header-container h1 {
         font-size: 2rem;
     }
     
-    .nav-container {
-        padding: 1vh 4vw;
+    .menu-options {
+        flex-direction: column;
+        gap: 0.5rem;
     }
     
-    .back-button {
+    .menu-link {
         font-size: 1rem;
+        padding: 0.3rem 0.6rem;
     }
     
-    .settings-icon {
-        font-size: 1.5rem;
+    .icon-menu, .settings-icon {
+        font-size: 1.8rem;
     }
 }

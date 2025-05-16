@@ -4,15 +4,23 @@
     padding: 0;
     box-sizing: border-box;
 }
-  
-body {
-    font-family: 'EB Garamond', serif;
-    background-color: #f5f7fa;
-    color: #1c1c1c;
+
+html, body {
+    height: 100%;
+    width: 100%;
+    max-width: 100vw;
     overflow-x: hidden;
 }
 
-/* Animação de slide */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #f5f7fa;
+    color: #1c1c1c;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Animações */
 @keyframes slideIn {
     from {
         transform: translateX(-100%);
@@ -24,7 +32,6 @@ body {
     }
 }
 
-/* Animação para o título deslizar da esquerda */
 @keyframes slideInFromLeft {
     from {
         transform: translateX(-100%);
@@ -36,7 +43,6 @@ body {
     }
 }
 
-/* Animação para os gráficos surgirem do centro */
 @keyframes slideInFromCenter {
     from {
         transform: scale(0.5);
@@ -48,243 +54,442 @@ body {
     }
 }
 
-/* Barra superior */
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+    100% { transform: translateY(0px); }
+}
+
+/* Particles.js container */
+.particles-container {
+    position: absolute;
+    width: 100%;
+    height: 300px;
+    z-index: -1;
+    overflow: hidden;
+}
+
+#particles-js {
+    width: 100%;
+    height: 100%;
+    background-color: #1c2e4a;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* Cabeçalho e conteúdo */
 .header-container {
     width: 100%;
     text-align: center;
     margin-bottom: 0;
-    background-color: #1c2e4a;
+    background: linear-gradient(135deg, #1c2e4a, #061938);
     color: white;
-    padding: 4vh; /* Aumenta a altura da barra */
-    animation: slideInFromLeft 1s ease-out; /* Animação para o título */
+    padding: 6vh 2vw;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
 }
 
-/* Título "Meus Gastos" */
-.header-container h1 {
-    font-size: 2.5rem; /* Aumenta o tamanho do título */
-    font-weight: bold;
-    animation: slideInFromLeft 1s ease-out; /* Animação para o título */
+.header-content {
+    position: relative;
+    z-index: 2;
 }
 
-/* Menu */
+.logo {
+    margin-bottom: 1rem;
+}
+
+.logo i {
+    font-size: 3rem;
+    color: #64b5f6;
+    animation: floating 3s ease-in-out infinite;
+}
+
+.title-text {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.subtitle {
+    font-size: 1.2rem;
+    font-weight: 300;
+    opacity: 0.8;
+    margin-top: 0.5rem;
+}
+
+/* Menu de navegação */
 .menu-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1vh 2vw;
-    background-color: #061938;
-    color: white;
-    margin-top: 0;
-    width: 100%;
-    animation: slideIn 1s ease-out;
-}
-
-.menu-options a[href="meusgastos.html"] {
-    color: white;
-    font-size: 1.5rem;
-    font-weight: bold;
-    text-decoration: none;
-    transition: transform 0.3s ease, text-shadow 0.3s ease;
-}
-
-.menu-options a[href="meusgastos.html"]:hover {
-    transform: scale(1.2) translateZ(0.5rem);
-    text-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
-}
-
-.menu-options span, .menu-options a {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #f0f0f0;
-    transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.menu-options span:hover {
-    transform: scale(1.1);
-    color: #dcdcdc;
-}
-
-/* Formulários */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    background-color: white;
-    padding: 2rem;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.1);
-    align-items: center; /* Centraliza os elementos no formulário */
-}
-
-form label {
-    font-weight: bold;
-    color: #333;
-    font-size: 1rem;
-    text-align: left;
-    width: 100%;
-}
-
-form input {
-    padding: 0.8rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.1); /* Sombra leve */
-    width: 100%; /* Largura total */
-    max-width: 400px; /* Limita a largura máxima */
-    transition: all 0.3s ease;
-}
-
-form input:focus {
-    border-color: #007bff;
-    box-shadow: 0 0.3rem 0.6rem rgba(0, 123, 255, 0.3); /* Sombra azul ao focar */
-    outline: none;
-}
-
-form button {
-    background-color: #007bff; /* Azul */
-    color: white;
-    border: none;
-    padding: 1rem;
-    font-size: 1rem;
-    font-weight: bold;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    box-shadow: 0 0.3rem 0.6rem rgba(0, 0, 0, 0.2); /* Sombra leve */
-    transition: all 0.3s ease;
-    width: 100%; /* Largura total */
-    max-width: 200px; /* Limita a largura máxima */
-    text-align: center;
-}
-
-form button:hover {
-    background-color: #0056b3; /* Azul mais escuro */
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
-}
-
-form button:active {
-    transform: scale(0.98); /* Leve redução no tamanho */
-    box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2); /* Sombra reduzida */
-}
-
-/* Container do gráfico */
-.chart-box {
-    display: flex;
-    flex-direction: column; /* Permite que o canvas e o título fiquem alinhados */
     justify-content: center;
     align-items: center;
-    background-color: white;
-    border-radius: 0.5vw;
-    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    height: auto;
-    width: 90%;
-    transition: all 0.3s ease;
-    animation: slideInFromCenter 1s ease-out; /* Aplica a animação de surgimento */
+    padding: 1.2vh 2vw;
+    background: linear-gradient(to right, #061938, #0d47a1);
+    color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
-.chart-box:hover {
-    transform: scale(1.05); /* Leve aumento ao passar o mouse */
-    box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.3);
-}
-
-/* Canvas */
-canvas {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100%;
-    max-height: 100%;
-}
-
-/* Ícone do menu */
-.icon-menu {
-    font-size: 2rem;
-    margin-right: 1vw;
-}
-
-/* Opções do menu */
 .menu-options {
     display: flex;
     justify-content: center;
     gap: 3vw;
     font-size: 1rem;
-    flex-grow: 1;
+}
+
+.menu-options a, .menu-options span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.menu-options a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+    font-weight: 600;
+}
+
+.menu-options a:hover, .menu-options span:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-options i {
+    font-size: 1.2rem;
 }
 
 /* Grid de gráficos */
 .charts-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Duas colunas */
-    grid-template-rows: repeat(2, auto); /* Duas linhas */
-    gap: 2vw; /* Espaçamento entre os containers */
-    padding: 2vw;
-}
-
-/* Container da tabela com rolagem */
-#grafico5 {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    background-color: white;
-    border-radius: 0.5vw;
-    box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.1);
-    padding: 1rem;
-    height: 45vh;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(auto-fill, minmax(350px, auto));
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
     width: 100%;
-    overflow-y: auto;
 }
 
-/* Estilo do container com barra de rolagem */
+/* Container dos gráficos */
+.chart-box {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    animation: slideInFromCenter 1s ease-out;
+    min-height: 350px;
+    max-height: 450px;
+    height: auto;
+    width: 100%;
+}
+
+.chart-box:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.chart-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.chart-header i {
+    font-size: 1.5rem;
+    margin-right: 0.8rem;
+    color: #0d47a1;
+}
+
+.chart-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin: 0;
+    color: #333;
+}
+
+canvas {
+    flex: 1;
+    width: 100% !important;
+    height: auto !important;
+    max-height: 350px !important;
+}
+
+/* Formulário */
+.form-box {
+    grid-column: 1;
+    grid-row: 2;
+    height: auto;
+    min-height: 400px;
+}
+
+.input-group {
+    width: 100%;
+    margin-bottom: 1.2rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+form label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: #333;
+}
+
+form label i {
+    color: #0d47a1;
+}
+
+form input {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+}
+
+form input:focus {
+    border-color: #0d47a1;
+    box-shadow: 0 0 0 2px rgba(13, 71, 161, 0.1);
+    background-color: white;
+    outline: none;
+}
+
+.btn-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #0d47a1, #1976d2);
+    color: white;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: auto;
+    min-width: 200px;
+    margin-top: 1rem;
+    align-self: center;
+}
+
+.btn-submit:hover {
+    background: linear-gradient(135deg, #1565c0, #1976d2);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.btn-submit:active {
+    transform: translateY(1px);
+}
+
+/* Tabela */
+.table-box {
+    grid-column: 2;
+    grid-row: 2;
+    height: auto;
+    min-height: 400px;
+}
+
 #historico-container {
-  max-height: 300px; /* Limita a altura do container */
-  overflow-y: auto; /* Adiciona barra de rolagem vertical */
-  overflow-x: hidden; /* Remove barra de rolagem horizontal */
-  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transição suave */
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 5px;
+    border-radius: 5px;
 }
 
-/* Efeito 3D ao passar o mouse no container */
-#historico-container:hover {
-  transform: scale(1.05) rotateX(5deg) rotateY(5deg); /* Expande e aplica rotação 3D */
-  box-shadow: 0 1vw 2vw rgba(0, 0, 0, 0.3); /* Sombra mais intensa */
+#historico-container::-webkit-scrollbar {
+    width: 8px;
 }
 
-/* Estilo da tabela */
+#historico-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#historico-container::-webkit-scrollbar-thumb {
+    background: #0d47a1;
+    border-radius: 10px;
+}
+
+#historico-container::-webkit-scrollbar-thumb:hover {
+    background: #064091;
+}
+
 #historicoGastos {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 1rem;
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
 }
 
 #historicoGastos th, #historicoGastos td {
-  padding: 0.8rem;
-  border: 1px solid #ddd;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 #historicoGastos th {
-  background-color: #f4f4f4;
-  font-weight: bold;
-  position: sticky; /* Mantém o cabeçalho fixo durante a rolagem */
-  top: 0;
-  z-index: 1;
+    background-color: #f8f9fa;
+    color: #333;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
-#historicoGastos tbody tr:nth-child(even) {
-  background-color: #f9f9f9;
+#historicoGastos th i {
+    margin-right: 0.5rem;
+    color: #0d47a1;
+}
+
+#historicoGastos tbody tr {
+    transition: all 0.2s ease;
 }
 
 #historicoGastos tbody tr:hover {
-  background-color: #f1f1f1;
+    background-color: #f2f7ff;
+    transform: scale(1.01);
 }
 
-/* Estilo do ícone da lixeira */
 .btn-excluir {
-  color: red;
-  cursor: pointer;
-  font-size: 1.2rem;
-  transition: transform 0.2s ease;
+    color: #f44336;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin: 0 auto;
 }
 
 .btn-excluir:hover {
-  transform: scale(1.2); /* Aumenta o tamanho ao passar o mouse */
+    color: #d32f2f;
+    transform: scale(1.2);
+    background-color: rgba(244, 67, 54, 0.1);
+}
+
+/* Footer */
+.footer {
+    background: linear-gradient(135deg, #1c2e4a, #061938);
+    color: white;
+    text-align: center;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.footer p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+    }
+    
+    .form-box, .table-box {
+        grid-column: 1;
+    }
+    
+    .form-box {
+        grid-row: 3;
+    }
+    
+    .table-box {
+        grid-row: 4;
+    }
+    
+    canvas {
+        height: 250px !important;
+    }
+    
+    .chart-box {
+        max-height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .title-text {
+        font-size: 2rem;
+    }
+    
+    .menu-options {
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+    
+    .menu-options a, .menu-options span {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.9rem;
+    }
+    
+    .charts-grid {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    canvas {
+        height: 200px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .header-container {
+        padding: 4vh 1vw;
+    }
+    
+    .chart-box {
+        padding: 1rem;
+    }
+    
+    .chart-header h3 {
+        font-size: 1.1rem;
+    }
+    
+    canvas {
+        height: 180px !important;
+    }
+    
+    #historicoGastos th, #historicoGastos td {
+        padding: 0.7rem 0.5rem;
+        font-size: 0.8rem;
+    }
 }
