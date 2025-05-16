@@ -154,7 +154,7 @@ app.get("/api/stocks/yahoo/:symbols", async (req, res) => {
       return res.json(apiCache[cacheKey].data);
     }
     
-    // Use sua chave da RapidAPI
+    // Use sua chave da RapidAPI com o host correto
     const options = {
       method: 'GET',
       headers: {
@@ -163,15 +163,24 @@ app.get("/api/stocks/yahoo/:symbols", async (req, res) => {
       }
     };
     
+    // URL correta para a API do Yahoo Finance via RapidAPI
     const url = `https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/${symbols}`;
+    
+    console.log("Fazendo requisição para a API do Yahoo Finance:", url);
     const response = await fetch(url, options);
     
     if (!response.ok) {
       console.error(`Erro na API Yahoo: Status ${response.status}`);
+      
+      // Imprimir detalhes adicionais sobre o erro
+      const errorText = await response.text();
+      console.error("Detalhes do erro:", errorText);
+      
       throw new Error(`Erro na API: ${response.status}`);
     }
     
     const data = await response.json();
+    console.log("Dados recebidos da API do Yahoo Finance:", JSON.stringify(data).substring(0, 200) + "...");
     
     // Armazenar no cache
     apiCache[cacheKey] = {
@@ -183,7 +192,8 @@ app.get("/api/stocks/yahoo/:symbols", async (req, res) => {
   } catch (error) {
     console.error("Erro ao buscar dados do Yahoo Finance:", error);
     
-    // Retornar um array vazio em vez de erro 500 para permitir o fallback
+    // Fallback para dados estáticos
+    console.log("Usando fallback para dados estáticos");
     res.json([]);
   }
 });

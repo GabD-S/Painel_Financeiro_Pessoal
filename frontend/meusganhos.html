@@ -2,29 +2,77 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meus Ganhos</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" href="assets/css/ganhos.css">
+  <link rel="stylesheet" href="assets/css/theme.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <!-- Sidebar (Menu Lateral) -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>Configurações</h2>
+      <span class="material-icons close-sidebar">close</span>
+    </div>
+    <div class="sidebar-content">
+      <div class="sidebar-item">
+        <h3>Tema</h3>
+        <div class="theme-toggle">
+          <span>Tema Escuro</span>
+          <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="sidebar-item">
+        <h3>Navegação</h3>
+        <ul style="list-style: none; padding-left: 10px;">
+          <li style="margin-bottom: 10px;"><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Painel Principal</a></li>
+          <li style="margin-bottom: 10px;"><a href="meusgastos.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Meus Gastos</a></li>
+          <li style="margin-bottom: 10px;"><a href="meusinvestimentos.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Meus Investimentos</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay para quando o menu lateral estiver aberto -->
+  <div class="overlay" id="overlay"></div>
+  
   <!-- Cabeçalho -->
   <header class="header-container">
-    <h1>Meus Ganhos</h1>
+    <h1 class="animate__animated animate__fadeInDown">Meus Ganhos</h1>
   </header>
+
+  <!-- Barra de navegação -->
+  <div class="nav-container">
+    <a href="index.html" class="back-button">
+      <span class="material-icons">arrow_back</span>
+      Voltar ao Painel
+    </a>
+    <span class="material-icons settings-icon" id="settingsIcon">settings</span>
+  </div>
 
   <!-- Grid dos Gráficos -->
   <div class="charts-container">
     <!-- Gráfico de ganhos por semana -->
-    <div class="chart-box">
+    <div class="chart-box animate__animated animate__fadeInLeft">
       <canvas id="grafico-ganhos"></canvas>
     </div>
 
     <!-- Gráfico de diferença entre ganhos e gastos -->
-    <div class="chart-box">
+    <div class="chart-box animate__animated animate__fadeInRight">
       <canvas id="grafico-ganho-gasto"></canvas>
     </div>
   </div>
 
+  
+  <script src="assets/js/theme_meuganhos.js"></script>
   <script src="assets/js/ganhos.js"></script>
 </body>
 </html>
