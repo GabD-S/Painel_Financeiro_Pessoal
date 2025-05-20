@@ -11,17 +11,15 @@ async function listarGastos(req, res) {
 }
 
 async function adicionarGasto(req, res) {
-  const { preco, tipo } = req.body;
-
-  console.log("Recebido no back-end:", req.body); // Adicionado para depuração
+  const { valor, tipo } = req.body;
 
   // Validação básica
-  if (typeof preco !== "number" || isNaN(preco) || !tipo || typeof tipo !== "string") {
+  if (typeof valor !== "number" || isNaN(valor) || !tipo || typeof tipo !== "string") {
     return res.status(400).json({ error: "Dados inválidos" });
   }
 
   try {
-    await inserirGasto(preco, tipo);
+    await inserirGasto(valor, tipo);
     res.status(201).send();
   } catch (error) {
     console.error("Erro ao inserir gasto:", error.message);

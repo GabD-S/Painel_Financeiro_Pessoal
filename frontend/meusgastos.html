@@ -11,8 +11,40 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/theme_3.css">
 </head>
 <body style="max-width: 100vw; overflow-x: hidden;">
+  <!-- Sidebar (Menu Lateral) para configurações -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2>Configurações</h2>
+      <span class="material-icons close-sidebar">close</span>
+    </div>
+    <div class="sidebar-content">
+      <div class="sidebar-item">
+        <h3>Tema</h3>
+        <div class="theme-toggle">
+          <span>Tema Escuro</span>
+          <label class="switch">
+            <input type="checkbox" id="themeToggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      <div class="sidebar-item">
+        <h3>Navegação</h3>
+        <ul style="list-style: none; padding-left: 10px;">
+          <li style="margin-bottom: 10px;"><a href="index.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Painel Principal</a></li>
+          <li style="margin-bottom: 10px;"><a href="meusganhos.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Meus Ganhos</a></li>
+          <li style="margin-bottom: 10px;"><a href="meusinvestimentos.html" style="color: white; text-decoration: none; display: block; padding: 10px; border-radius: 5px; background-color: rgba(255,255,255,0.1);">Meus Investimentos</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Overlay para quando o menu lateral estiver aberto -->
+  <div class="overlay" id="overlay"></div>
+
   <!-- Cabeçalho com efeito de partículas -->
   <div class="particles-container">
     <div id="particles-js"></div>
@@ -28,99 +60,107 @@
     </div>
   </header>
 
-  <!-- Menu de navegação -->
+  <!-- Menu de navegação com botão Home adicionado -->
   <nav class="menu-container">
     <div class="menu-options">
+      <a href="index.html" class="menu-link home-link">
+        <i class="fas fa-home"></i> Início
+      </a>
       <a href="meusgastos.html" class="active">
         <i class="fas fa-chart-pie"></i> Dashboard
       </a>
-      <span>
+      <span id="historico-link">
         <i class="fas fa-history"></i> Histórico
       </span>
-      <span>
+      <span id="settings-link">
         <i class="fas fa-cog fa-spin"></i> Configurações
       </span>
-      <span>
+      <span id="help-link">
         <i class="fas fa-question-circle fa-pulse"></i> Ajuda
       </span>
     </div>
   </nav>
 
-  <!-- Grid dos Gráficos -->
-  <div class="charts-grid">
-    <!-- Gráfico em pizza -->
-    <div class="chart-box" data-aos="fade-up">
-      <div class="chart-header">
-        <i class="fas fa-chart-pie"></i>
-        <h3>Distribuição de Gastos</h3>
-      </div>
-      <canvas id="pizzaGastos"></canvas>
-    </div>
-
-    <!-- Gráfico de gastos -->
-    <div class="chart-box" data-aos="fade-up" data-aos-delay="100">
-      <div class="chart-header">
-        <i class="fas fa-chart-line"></i>
-        <h3>Evolução de Gastos</h3>
-      </div>
-      <canvas id="grafico-gastos"></canvas>
-    </div>
-
-    <!-- Gráfico de diferença entre ganhos e gastos -->
-    <div class="chart-box" data-aos="fade-up" data-aos-delay="200">
-      <div class="chart-header">
-        <i class="fas fa-balance-scale"></i>
-        <h3>Ganhos vs Gastos</h3>
-      </div>
-      <canvas id="grafico-ganho-gasto"></canvas>
-    </div>
-
-    <!-- Formulário para adicionar informações -->
-    <div class="chart-box form-box" data-aos="fade-up" data-aos-delay="300">
-      <div class="chart-header">
-        <i class="fas fa-plus-circle"></i>
-        <h3>Adicionar Novo Gasto</h3>
-      </div>
-      <form id="formGasto">
-        <div class="input-group">
-          <label for="preco">
-            <i class="fas fa-money-bill-wave"></i> Valor do Gasto:
-          </label>
-          <input type="number" step="0.01" id="preco" required placeholder="R$ 0,00">
+  <!-- Container principal com dashboard e histórico -->
+  <div class="dashboard-container">
+    <!-- Grid dos 3 Gráficos em forma de grade 2x2 -->
+    <div class="charts-grid">
+      <!-- Gráfico 1: Pizza de distribuição -->
+      <div class="chart-box" data-aos="fade-up">
+        <div class="chart-header">
+          <i class="fas fa-chart-pie"></i>
+          <h3>Distribuição de Gastos</h3>
         </div>
-
-        <div class="input-group">
-          <label for="tipo">
-            <i class="fas fa-tag"></i> Categoria:
-          </label>
-          <input type="text" id="tipo" placeholder="Ex: Alimentação, Transporte...">
-        </div>
-
-        <button type="submit" class="btn-submit">
-          <i class="fas fa-check"></i> Adicionar Gasto
-        </button>
-      </form>
-    </div>
-
-    <!-- Tabela de Histórico de Gastos -->
-    <div class="chart-box table-box" data-aos="fade-up" data-aos-delay="400">
-      <div class="chart-header">
-        <i class="fas fa-history"></i>
-        <h3>Histórico de Gastos</h3>
+        <canvas id="pizzaGastos"></canvas>
       </div>
-      <div id="historico-container">
-        <table id="historicoGastos">
-          <thead>
-            <tr>
-              <th><i class="fas fa-money-bill-wave"></i> Preço</th>
-              <th><i class="fas fa-tag"></i> Categoria</th>
-              <th><i class="fas fa-cogs"></i> Ação</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- Linhas serão inseridas dinamicamente via JS -->
-          </tbody>
-        </table>
+
+      <!-- Gráfico 2: Evolução de gastos -->
+      <div class="chart-box" data-aos="fade-up" data-aos-delay="100">
+        <div class="chart-header">
+          <i class="fas fa-chart-line"></i>
+          <h3>Evolução de Gastos</h3>
+        </div>
+        <canvas id="grafico-gastos"></canvas>
+      </div>
+
+      <!-- Gráfico 3: Ganhos vs Gastos -->
+      <div class="chart-box" data-aos="fade-up" data-aos-delay="150">
+        <div class="chart-header">
+          <i class="fas fa-balance-scale"></i>
+          <h3>Ganhos vs Gastos</h3>
+        </div>
+        <canvas id="grafico-ganho-gasto"></canvas>
+      </div>
+      
+      <!-- Box 4: Histórico de Gastos -->
+      <div class="chart-box historico-box" data-aos="fade-up" data-aos-delay="200" id="historico-section">
+        <div class="chart-header">
+          <i class="fas fa-history"></i>
+          <h3>Histórico de Gastos</h3>
+        </div>
+        <div class="tabela-responsive">
+          <table id="historicoGastos">
+            <thead>
+              <tr>
+                <th><i class="fas fa-money-bill-wave"></i> Preço</th>
+                <th><i class="fas fa-tag"></i> Categoria</th> 
+                <th><i class="fas fa-calendar-alt"></i> Semana</th>
+                <th><i class="fas fa-cogs"></i> Ação</th>
+              </tr>
+            </thead>
+            <tbody>
+              <!-- Linhas serão inseridas dinamicamente via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Ajuda -->
+  <div id="help-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Entendendo seus Gastos</h2>
+      <div class="modal-body">
+        <p><strong>O que são Gastos?</strong></p>
+        <p>Gastos representam todas as saídas financeiras do seu orçamento, como despesas cotidianas, contas mensais, compras e pagamentos diversos.</p>
+        
+        <p><strong>Tipos de Gastos:</strong></p>
+        <ul>
+          <li><strong>Gastos Fixos:</strong> Valores que se repetem regularmente, como aluguel, internet e planos.</li>
+          <li><strong>Gastos Variáveis:</strong> Valores que variam mês a mês, como alimentação e transporte.</li>
+          <li><strong>Gastos Eventuais:</strong> Valores ocasionais, como compras não planejadas.</li>
+        </ul>
+        
+        <p><strong>Dicas para controlar seus gastos:</strong></p>
+        <ol>
+          <li>Estabeleça um orçamento mensal</li>
+          <li>Categorize seus gastos</li>
+          <li>Priorize despesas essenciais</li>
+          <li>Evite compras por impulso</li>
+          <li>Revise regularmente seus hábitos de consumo</li>
+        </ol>
       </div>
     </div>
   </div>

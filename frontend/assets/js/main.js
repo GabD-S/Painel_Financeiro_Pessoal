@@ -279,6 +279,11 @@ async function carregarDadosGanhos() {
 async function carregarDadosGastos() {
   try {
     const response = await fetch('http://localhost:3000/api/gastos');
+
+    if (!response.ok) {
+      throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+    }
+
     const dados = await response.json();
 
     graficoGastos.data.labels = [];
@@ -319,10 +324,22 @@ async function carregarDadosInvestimentos() {
 async function carregarDadosGanhoGasto() {
   try {
     const responseGanhos = await fetch('http://localhost:3000/api/ganhos');
-    const dadosGanhos = await responseGanhos.json();
+    
+    if (!responseGanhos.ok) {
+      throw new Error(`Erro na API de ganhos: ${responseGanhos.status} ${responseGanhos.statusText}`);
+    }
 
-    const responseGastos = await fetch('http://localhost:3000/api/gastos');
+    const dadosGanhos = await responseGanhos.json();
+    console.log("[LOG] Dados recebidos de /api/ganhos:", dadosGanhos);
+
+    const responseGastos = await fetch('http://localhost:3000/api/gastos?group=semana');
+    
+    if (!responseGastos.ok) {
+      throw new Error(`Erro na API de gastos: ${responseGastos.status} ${responseGastos.statusText}`);
+    }
+
     const dadosGastos = await responseGastos.json();
+    console.log("[LOG] Dados recebidos de /api/gastos?group=semana:", dadosGastos);
 
     const ganhosPorSemana = {};
     const gastosPorSemana = {};
@@ -357,7 +374,10 @@ async function carregarDadosGanhoGasto() {
 
     graficoGanhoGasto.update();
   } catch (error) {
-    console.error("Erro ao carregar dados de diferença entre ganhos e gastos:", error);
+    console.error("[ERRO] Erro ao carregar dados de diferença entre ganhos e gastos:", error);
+    graficoGanhoGasto.data.labels = [];
+    graficoGanhoGasto.data.datasets[0].data = [];
+    graficoGanhoGasto.update();
   }
 }
 
@@ -378,22 +398,35 @@ async function excluirRegistro(tipo, id) {
   }
 }
 
-// Função para carregar o histórico de valores
+// Função para carregar o histórico de valores com mais robustez
 async function carregarHistorico() {
   try {
-    const tipos = ['ganhos', 'gastos', 'investimentos'];
     const tabelaBody = document.querySelector('#historicoTabela tbody');
     tabelaBody.innerHTML = '';
 
-    for (const tipo of tipos) {
-      const response = await fetch(`http://localhost:3000/api/${tipo}`);
-      if (!response.ok) {
-        throw new Error(`Erro ao buscar dados de ${tipo}`);
+    // Função auxiliar para carregar dados com tratamento de erro
+    async function carregarDadosTipo(tipo) {
+      try {
+        const response = await fetch(`http://localhost:3000/api/${tipo}`);
+        if (!response.ok) {
+          console.warn(`Erro ao buscar dados de ${tipo}: ${response.status} ${response.statusText}`);
+          return [];
+        }
+        
+        const dados = await response.json();
+        return Array.isArray(dados) ? dados : [];
+        
+      } catch (error) {
+        console.warn(`Erro ao processar dados de ${tipo}:`, error);
+        return [];
       }
+    }
 
-      const dados = await response.json();
-
-      // Ordenar os dados por semana decrescente (mais recentes primeiro)
+    // Primeiro buscar os tipos padrão
+    const tipos = ['ganhos', 'investimentos'];
+    
+    for (const tipo of tipos) {
+      const dados = await carregarDadosTipo(tipo);
       dados.sort((a, b) => b.semana - a.semana);
 
       dados.forEach(item => {
@@ -427,18 +460,68 @@ async function carregarHistorico() {
         tabelaBody.appendChild(linha);
       });
     }
+
+    // Agora buscar os gastos
+    try {
+      const responseGastos = await fetch(`http://localhost:3000/api/gastos/historico`);
+      if (!responseGastos.ok) {
+        throw new Error(`Erro ao buscar histórico de gastos: ${responseGastos.status} ${responseGastos.statusText}`);
+      }
+      
+      const dadosGastos = await responseGastos.json();
+      
+      if (!Array.isArray(dadosGastos)) {
+        console.error("API de histórico de gastos não retornou um array:", dadosGastos);
+        return;
+      }
+      
+      dadosGastos.forEach(item => {
+        const linha = document.createElement('tr');
+
+        const valorTd = document.createElement('td');
+        valorTd.textContent = `R$ ${item.valor.toFixed(2)}`;
+        linha.appendChild(valorTd);
+
+        const tipoTd = document.createElement('td');
+        tipoTd.textContent = `Gastos (${item.tipo})`;
+        linha.appendChild(tipoTd);
+
+        const semanaTd = document.createElement('td');
+        semanaTd.textContent = `Semana ${item.semana}`;
+        linha.appendChild(semanaTd);
+
+        const acaoTd = document.createElement('td');
+        const lixeira = document.createElement('span');
+        lixeira.classList.add('material-icons', 'icone-lixeira');
+        lixeira.textContent = 'delete';
+        lixeira.addEventListener('click', async () => {
+          if (confirm('Tem certeza que deseja excluir este registro?')) {
+            await excluirRegistro('gastos', item.id);
+            await carregarHistorico(); // Atualiza o histórico após exclusão
+          }
+        });
+        acaoTd.appendChild(lixeira);
+        linha.appendChild(acaoTd);
+
+        tabelaBody.appendChild(linha);
+      });
+    } catch (error) {
+      console.error("Erro ao carregar o histórico de gastos:", error);
+    }
+    
   } catch (error) {
-    console.error('Erro ao carregar o histórico:', error);
+    console.error('Erro geral ao carregar o histórico:', error);
   }
 }
 
 // Função para enviar dados do formulário
 document.getElementById('dadosForm').addEventListener('submit', async (event) => {
-  event.preventDefault(); // Evita o comportamento padrão do formulário
+  event.preventDefault();
 
   const valor = parseFloat(document.getElementById('valor').value);
   const semana = parseInt(document.getElementById('semana').value);
   const tipo = document.getElementById('tipo').value;
+  const tipoGasto = document.getElementById('tipoGasto')?.value; // Campo opcional para gastos
 
   if (isNaN(valor) || isNaN(semana) || !tipo) {
     document.getElementById('erroMsg').textContent = 'Preencha todos os campos corretamente.';
@@ -446,12 +529,15 @@ document.getElementById('dadosForm').addEventListener('submit', async (event) =>
   }
 
   try {
+    const body = { valor, semana };
+    if (tipo === "gastos") {
+      body.tipoGasto = tipoGasto || "Gasto obrigatório";
+    }
+
     const response = await fetch(`http://localhost:3000/api/${tipo}`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ valor, semana }),
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
     });
 
     if (!response.ok) {
@@ -474,11 +560,17 @@ document.getElementById('dadosForm').addEventListener('submit', async (event) =>
   }
 });
 
-// Carregar dados ao carregar a página
+// Carregar dados ao carregar a página com tratamento de erro
 window.addEventListener('DOMContentLoaded', () => {
-  carregarDadosGanhos();
-  carregarDadosGastos();
-  carregarDadosInvestimentos();
-  carregarDadosGanhoGasto();
-  carregarHistorico();
+  // Adicionar tratamento de erro para cada função
+  Promise.allSettled([
+    carregarDadosGanhos().catch(err => console.error("Erro em carregarDadosGanhos:", err)),
+    carregarDadosGastos().catch(err => console.error("Erro em carregarDadosGastos:", err)),
+    carregarDadosInvestimentos().catch(err => console.error("Erro em carregarDadosInvestimentos:", err)),
+    carregarDadosGanhoGasto().catch(err => console.error("Erro em carregarDadosGanhoGasto:", err)),
+    carregarHistorico().catch(err => console.error("Erro em carregarHistorico:", err))
+  ]).then(results => {
+    console.log("Tentativas de carregamento concluídas", 
+      results.map((r, i) => `${i}: ${r.status}`).join(', '));
+  });
 });
