@@ -63,15 +63,108 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   }
 
+  // Controle da Sidebar
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('overlay');
+  const settingsLink = document.getElementById('settings-link');
+  const closeSidebar = document.querySelector('.close-sidebar');
+  
+  // Abrir sidebar ao clicar no ícone de configurações
+  if (settingsLink) {
+    settingsLink.addEventListener('click', function() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+    });
+  }
+  
+  // Fechar sidebar ao clicar no X
+  if (closeSidebar) {
+    closeSidebar.addEventListener('click', function() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  }
+  
+  // Fechar sidebar ao clicar no overlay
+  if (overlay) {
+    overlay.addEventListener('click', function() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    });
+  }
+
+  // Rolagem suave para o histórico
+  const historicoLink = document.getElementById('historico-link');
+  const historicoSection = document.getElementById('historico-section');
+  
+  if (historicoLink && historicoSection) {
+    historicoLink.addEventListener('click', function(e) {
+      e.preventDefault();
+      historicoSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    });
+  }
+
+  // Modal de ajuda
+  const helpLink = document.getElementById('help-link');
+  const helpModal = document.getElementById('help-modal');
+  const closeModal = document.querySelector('.close-modal');
+  
+  if (helpLink && helpModal) {
+    helpLink.addEventListener('click', function() {
+      helpModal.style.display = 'block';
+    });
+  }
+  
+  if (closeModal) {
+    closeModal.addEventListener('click', function() {
+      helpModal.style.display = 'none';
+    });
+  }
+  
+  // Fechar modal ao clicar fora dele
+  window.addEventListener('click', function(event) {
+    if (event.target === helpModal) {
+      helpModal.style.display = 'none';
+    }
+  });
+
+  // Tema escuro
+  const themeToggle = document.getElementById('themeToggle');
+  
+  if (themeToggle) {
+    // Verificar se há uma preferência salva
+    const darkMode = localStorage.getItem('darkMode') === 'true';
+    
+    // Aplicar tema inicial
+    if (darkMode) {
+      document.body.classList.add('dark-theme');
+      themeToggle.checked = true;
+    }
+    
+    // Alternar tema
+    themeToggle.addEventListener('change', function() {
+      if (this.checked) {
+        document.body.classList.add('dark-theme');
+        localStorage.setItem('darkMode', 'true');
+      } else {
+        document.body.classList.remove('dark-theme');
+        localStorage.setItem('darkMode', 'false');
+      }
+    });
+  }
+
   // Formulário para adicionar gastos
   const formGasto = document.getElementById('formGasto');
   if (formGasto) {
     formGasto.addEventListener('submit', async function (e) {
       e.preventDefault();
-      const preco = parseFloat(document.getElementById('preco').value);
+      const valor = parseFloat(document.getElementById('preco').value);
       const tipo = document.getElementById('tipo').value.trim();
 
-      if (isNaN(preco) || preco <= 0 || !tipo) {
+      if (isNaN(valor) || valor <= 0 || !tipo) {
         showNotification('Erro', 'Por favor, preencha todos os campos corretamente.', 'error');
         return;
       }
@@ -80,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const response = await fetch('/api/gastos', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ preco, tipo })
+          body: JSON.stringify({ valor, tipo })
         });
 
         if (!response.ok) {
@@ -110,59 +203,67 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Função para mostrar notificações
   function showNotification(title, message, type) {
-    // Criando elementos de notificação
     const notification = document.createElement('div');
     notification.className = `notification ${type}`;
-    
-    const notificationContent = `
+    notification.innerHTML = `
       <div class="notification-header">
-        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
-        <span>${title}</span>
-        <i class="fas fa-times close-notification"></i>
+        <strong>${title}</strong>
+        <button type="button" class="close">&times;</button>
       </div>
       <div class="notification-body">
-        <p>${message}</p>
+        ${message}
       </div>
     `;
-    
-    notification.innerHTML = notificationContent;
-    
-    // Adicionando ao corpo do documento
     document.body.appendChild(notification);
     
-    // Mostrando a notificação com animação
     setTimeout(() => {
       notification.classList.add('show');
     }, 10);
     
-    // Removendo após 3 segundos
     setTimeout(() => {
       notification.classList.remove('show');
       setTimeout(() => {
-        document.body.removeChild(notification);
+        notification.remove();
       }, 300);
     }, 3000);
     
-    // Permitindo fechar a notificação
-    const closeBtn = notification.querySelector('.close-notification');
-    if (closeBtn) {
-      closeBtn.addEventListener('click', () => {
-        notification.classList.remove('show');
-        setTimeout(() => {
-          document.body.removeChild(notification);
-        }, 300);
-      });
-    }
+    notification.querySelector('.close').addEventListener('click', () => {
+      notification.classList.remove('show');
+      setTimeout(() => {
+        notification.remove();
+      }, 300);
+    });
   }
 
   async function carregarGastosPizza() {
     try {
-      const res = await fetch('/api/gastos');
+      const res = await fetch('/api/gastos?group=semana');
+      
+      if (!res.ok) {
+        throw new Error(`Erro na API: ${res.status} ${res.statusText}`);
+      }
+      
       const dados = await res.json();
+      
+      // Verificar se dados é um array
+      if (!Array.isArray(dados)) {
+        console.error("API não retornou um array:", dados);
+        return;
+      }
+      
+      if (dados.length === 0) {
+        console.log("Nenhum dado de gastos encontrado para o gráfico de pizza.");
+        return;
+      }
+
+      // Calcular o total de gastos
+      const totalGastos = dados.reduce((acc, item) => acc + item.total, 0);
+
+      // Calcular porcentagens
+      const porcentagens = dados.map(item => ((item.total / totalGastos) * 100).toFixed(2));
 
       const ctx = document.getElementById('pizzaGastos').getContext('2d');
       
-      // Cores para o gráfico de pizza
       const cores = [
         '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b', 
         '#6f42c1', '#fd7e14', '#20c9a6', '#5a5c69', '#858796'
@@ -173,15 +274,12 @@ document.addEventListener('DOMContentLoaded', function() {
       window.pizzaChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
-          labels: dados.map(item => item.tipo),
+          labels: dados.map(item => `Semana ${item.semana} (${porcentagens[dados.indexOf(item)]}%)`),
           datasets: [{
             data: dados.map(item => item.total),
             backgroundColor: dados.map((_, idx) => cores[idx % cores.length]),
             borderColor: '#ffffff',
-            borderWidth: 2,
-            hoverBorderColor: '#ffffff',
-            hoverBorderWidth: 3,
-            hoverOffset: 10
+            borderWidth: 2
           }]
         },
         options: {
@@ -189,40 +287,12 @@ document.addEventListener('DOMContentLoaded', function() {
           maintainAspectRatio: false,
           cutout: '65%',
           plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                padding: 20,
-                usePointStyle: true,
-                pointStyle: 'circle',
-                font: {
-                  size: 12,
-                  family: "'Montserrat', sans-serif",
-                  weight: '500'
-                }
-              }
-            },
             tooltip: {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              titleFont: {
-                size: 14,
-                family: "'Montserrat', sans-serif",
-                weight: '600'
-              },
-              bodyFont: {
-                size: 13,
-                family: "'Montserrat', sans-serif"
-              },
-              padding: 12,
-              displayColors: true,
               callbacks: {
                 label: function(context) {
-                  const value = context.raw;
-                  const formattedValue = new Intl.NumberFormat('pt-BR', {
-                    style: 'currency',
-                    currency: 'BRL'
-                  }).format(value);
-                  return formattedValue;
+                  const valor = context.raw;
+                  const porcentagem = porcentagens[context.dataIndex];
+                  return `R$ ${valor.toFixed(2)} (${porcentagem}%)`;
                 }
               }
             }
@@ -236,11 +306,19 @@ document.addEventListener('DOMContentLoaded', function() {
 
   async function carregarDadosGastos() {
     try {
-      const response = await fetch('/api/gastos');
+      const response = await fetch('/api/gastos?group=semana');
+      
+      if (!response.ok) {
+        throw new Error(`Erro na API: ${response.status} ${response.statusText}`);
+      }
+      
       const dados = await response.json();
-
-      // Transformar dados para gráfico de linha
-      const processedData = processarDadosGastos(dados);
+      
+      // Verificar se dados é um array
+      if (!Array.isArray(dados)) {
+        console.error("API não retornou um array:", dados);
+        return;
+      }
 
       const ctx = document.getElementById('grafico-gastos').getContext('2d');
       
@@ -249,78 +327,18 @@ document.addEventListener('DOMContentLoaded', function() {
       window.gastosChart = new Chart(ctx, {
         type: 'line',
         data: {
-          labels: processedData.labels,
+          labels: dados.map(item => `Semana ${item.semana}`),
           datasets: [{
             label: 'Gastos',
-            data: processedData.data,
+            data: dados.map(item => item.total),
             backgroundColor: 'rgba(255, 99, 132, 0.2)',
             borderColor: 'rgba(255, 99, 132, 1)',
-            borderWidth: 3,
-            pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-            pointBorderColor: '#fff',
-            pointBorderWidth: 2,
-            pointRadius: 5,
-            pointHoverRadius: 8,
-            tension: 0.3,
-            fill: true
+            borderWidth: 3
           }]
         },
         options: {
           responsive: true,
-          maintainAspectRatio: false,
-          scales: {
-            y: {
-              beginAtZero: true,
-              grid: {
-                color: 'rgba(0, 0, 0, 0.05)',
-                lineWidth: 1
-              },
-              ticks: {
-                callback: function(value) {
-                  return `R$ ${value.toLocaleString('pt-BR')}`;
-                },
-                font: {
-                  family: "'Montserrat', sans-serif",
-                  weight: '500'
-                }
-              }
-            },
-            x: {
-              grid: {
-                display: false
-              },
-              ticks: {
-                font: {
-                  family: "'Montserrat', sans-serif",
-                  weight: '500'
-                }
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              display: false
-            },
-            tooltip: {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              titleFont: {
-                size: 14,
-                family: "'Montserrat', sans-serif",
-                weight: '600'
-              },
-              bodyFont: {
-                size: 13,
-                family: "'Montserrat', sans-serif"
-              },
-              padding: 12,
-              callbacks: {
-                label: function(context) {
-                  const value = context.raw;
-                  return `R$ ${value.toLocaleString('pt-BR')}`;
-                }
-              }
-            }
-          }
+          maintainAspectRatio: false
         }
       });
     } catch (error) {
@@ -328,27 +346,44 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Função auxiliar para processar dados do gráfico de gastos
-  function processarDadosGastos(dados) {
-    // Aqui podemos transformar ou agregar os dados conforme necessário
-    // Por exemplo, agrupar por mês ou semana, calcular médias, etc.
-    
-    return {
-      labels: dados.map(item => item.tipo),
-      data: dados.map(item => item.total)
-    };
-  }
-
   async function carregarDadosGanhoGasto() {
     try {
       const responseGanhos = await fetch('/api/ganhos');
+      
+      if (!responseGanhos.ok) {
+        throw new Error(`Erro na API de ganhos: ${responseGanhos.status}`);
+      }
+      
       const dadosGanhos = await responseGanhos.json();
+      
+      if (!Array.isArray(dadosGanhos)) {
+        console.error("API de ganhos não retornou um array:", dadosGanhos);
+        return;
+      }
 
-      const responseGastos = await fetch('/api/gastos');
+      const responseGastos = await fetch('/api/gastos?group=semana');
+      
+      if (!responseGastos.ok) {
+        throw new Error(`Erro na API de gastos: ${responseGastos.status}`);
+      }
+      
       const dadosGastos = await responseGastos.json();
+      
+      if (!Array.isArray(dadosGastos)) {
+        console.error("API de gastos não retornou um array:", dadosGastos);
+        return;
+      }
 
-      // Preparar dados para gráfico de comparação
-      const { labels, ganhos, gastos, diferencas } = prepararDadosComparacao(dadosGanhos, dadosGastos);
+      const semanas = [...new Set([
+        ...dadosGanhos.map(g => g.semana), 
+        ...dadosGastos.map(g => g.semana)
+      ])].sort((a, b) => a - b);
+      
+      const diferencas = semanas.map(semana => {
+        const ganho = dadosGanhos.find(g => g.semana === semana)?.total || 0;
+        const gasto = dadosGastos.find(g => g.semana === semana)?.total || 0;
+        return ganho - gasto;
+      });
 
       const ctx = document.getElementById('grafico-ganho-gasto').getContext('2d');
       
@@ -357,72 +392,29 @@ document.addEventListener('DOMContentLoaded', function() {
       window.ganhoGastoChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: labels,
-          datasets: [
-            {
-              label: 'Ganhos',
-              data: ganhos,
-              backgroundColor: 'rgba(75, 192, 192, 0.7)',
-              borderColor: 'rgb(75, 192, 192)',
-              borderWidth: 2,
-              borderRadius: 5
-            },
-            {
-              label: 'Gastos',
-              data: gastos,
-              backgroundColor: 'rgba(255, 99, 132, 0.7)',
-              borderColor: 'rgb(255, 99, 132)',
-              borderWidth: 2,
-              borderRadius: 5
-            },
-            {
-              label: 'Balanço',
-              data: diferencas,
-              type: 'line',
-              backgroundColor: 'rgba(54, 162, 235, 0.5)',
-              borderColor: 'rgb(54, 162, 235)',
-              borderWidth: 3,
-              fill: false,
-              pointRadius: 5,
-              pointBackgroundColor: 'rgb(54, 162, 235)',
-              tension: 0.3
-            }
-          ]
+          labels: semanas.map(s => `Semana ${s}`),
+          datasets: [{
+            label: 'Diferença (Ganhos - Gastos)',
+            data: diferencas,
+            backgroundColor: diferencas.map(d => d >= 0 ? 'rgba(0, 128, 0, 0.7)' : 'rgba(255, 0, 0, 0.7)'),
+            borderColor: diferencas.map(d => d >= 0 ? 'rgba(0, 128, 0, 1)' : 'rgba(255, 0, 0, 1)'),
+            borderWidth: 1
+          }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            y: {
+            y: { 
               beginAtZero: true,
               grid: {
-                color: 'rgba(0, 0, 0, 0.05)',
+                drawBorder: true,
+                color: (context) => context.tick.value === 0 ? '#2196F3' : '#e5e5e5',
+                lineWidth: (context) => context.tick.value === 0 ? 2 : 1
               },
               ticks: {
                 callback: function(value) {
-                  return `R$ ${value.toLocaleString('pt-BR')}`;
-                }
-              }
-            }
-          },
-          plugins: {
-            legend: {
-              position: 'bottom',
-              labels: {
-                usePointStyle: true,
-                pointStyle: 'rect',
-                padding: 20
-              }
-            },
-            tooltip: {
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              padding: 12,
-              callbacks: {
-                label: function(context) {
-                  const label = context.dataset.label || '';
-                  const value = context.raw;
-                  const formattedValue = `R$ ${value.toLocaleString('pt-BR')}`;
-                  return `${label}: ${formattedValue}`;
+                  return `R$ ${value}`;
                 }
               }
             }
@@ -434,35 +426,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
-  // Função auxiliar para preparar dados de comparação
-  function prepararDadosComparacao(dadosGanhos, dadosGastos) {
-    // Exemplo simplificado - ajuste conforme necessário com seus dados reais
-    const semanas = [...new Set([...dadosGanhos.map(g => g.semana), ...dadosGastos.map(g => g.semana)])];
-    
-    const ganhos = [];
-    const gastos = [];
-    const diferencas = [];
-    
-    semanas.forEach(semana => {
-      const ganho = dadosGanhos.find(g => g.semana === semana)?.total || 0;
-      const gasto = dadosGastos.find(g => g.semana === semana)?.total || 0;
-      
-      ganhos.push(ganho);
-      gastos.push(gasto);
-      diferencas.push(ganho - gasto);
-    });
-    
-    return {
-      labels: semanas.map(s => `Semana ${s}`),
-      ganhos,
-      gastos,
-      diferencas
-    };
-  }
-
   async function carregarHistoricoGastos() {
     try {
-      const res = await fetch('/api/novos_gastos');
+      const res = await fetch('/api/gastos/historico');
       const dados = await res.json();
 
       const tbody = document.querySelector('#historicoGastos tbody');
@@ -471,13 +437,14 @@ document.addEventListener('DOMContentLoaded', function() {
         return;
       }
 
-      tbody.innerHTML = ''; // Limpa a tabela antes de preenchê-la
+      tbody.innerHTML = '';
 
       dados.forEach(gasto => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td>R$ ${gasto.preco.toFixed(2)}</td>
+          <td>R$ ${gasto.valor.toFixed(2)}</td>
           <td>${gasto.tipo}</td>
+          <td>${gasto.semana ? `Semana ${gasto.semana}` : 'Semana não definida'}</td>
           <td>
             <span class="btn-excluir" data-id="${gasto.id}">
               <i class="fas fa-trash-alt"></i>
@@ -485,188 +452,64 @@ document.addEventListener('DOMContentLoaded', function() {
           </td>
         `;
         tbody.appendChild(tr);
-        
-        // Adiciona animação de entrada
-        setTimeout(() => {
-          tr.style.opacity = '1';
-          tr.style.transform = 'translateY(0)';
-        }, 50);
       });
 
-      // Adiciona evento de exclusão aos botões
       document.querySelectorAll('.btn-excluir').forEach(button => {
-        button.addEventListener('click', async function () {
+        button.addEventListener('click', async function() {
           const id = this.getAttribute('data-id');
-          
-          // Animação de confirmação
-          this.innerHTML = '<i class="fas fa-question"></i>';
-          this.classList.add('confirming');
-          
-          // Timer para volta ao estado original se não houver segunda confirmação
-          const confirmeTimeout = setTimeout(() => {
-            this.innerHTML = '<i class="fas fa-trash-alt"></i>';
-            this.classList.remove('confirming');
-          }, 2000);
-          
-          // Segunda confirmação para excluir
-          this.addEventListener('click', async function secondClick(e) {
-            e.stopPropagation();
-            clearTimeout(confirmeTimeout);
-            
-            // Animação de loading
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            
+          if (confirm('Tem certeza que deseja excluir este gasto?')) {
             try {
               await excluirGasto(id);
-              
-              // Animação de remoção da linha
-              const row = this.closest('tr');
-              row.style.opacity = '0';
-              row.style.transform = 'translateX(100%)';
-              
-              setTimeout(() => {
-                carregarHistoricoGastos(); // Recarrega a tabela após exclusão
-              }, 300);
-              
-              showNotification('Sucesso', 'Gasto excluído com sucesso!', 'success');
-              
-              // Atualizar gráficos
               await Promise.all([
                 carregarGastosPizza(),
                 carregarDadosGastos(),
-                carregarDadosGanhoGasto()
+                carregarDadosGanhoGasto(),
+                carregarHistoricoGastos()
               ]);
             } catch (error) {
               console.error('Erro ao excluir gasto:', error);
-              showNotification('Erro', 'Não foi possível excluir o gasto.', 'error');
-              this.innerHTML = '<i class="fas fa-trash-alt"></i>';
             }
-            
-            // Remove o evento de segunda confirmação
-            this.removeEventListener('click', secondClick);
-          }, { once: true });
+          }
         });
       });
     } catch (error) {
       console.error('Erro ao carregar o histórico de gastos:', error);
-      showNotification('Erro', 'Não foi possível carregar o histórico de gastos.', 'error');
     }
   }
 
   async function excluirGasto(id) {
-    const res = await fetch(`/api/novos_gastos/${id}`, { method: 'DELETE' });
+    const res = await fetch(`/api/gastos/${id}`, { method: 'DELETE' });
     if (!res.ok) {
       throw new Error('Erro ao excluir o gasto.');
     }
     return true;
   }
 
-  // Carregar todos os dados ao inicializar a página
-  Promise.all([
-    carregarGastosPizza(),
-    carregarDadosGastos(),
-    carregarDadosGanhoGasto(),
-    carregarHistoricoGastos()
+  function ajustarTamanhoGraficos() {
+    const canvasElements = document.querySelectorAll('canvas');
+    canvasElements.forEach(canvas => {
+      const parentHeight = canvas.parentElement.clientHeight;
+      const maxHeight = Math.min(parentHeight, 350);
+      canvas.style.maxHeight = `${maxHeight}px`;
+    });
+  }
+
+  Promise.allSettled([
+    carregarGastosPizza().catch(err => console.error("Erro em carregarGastosPizza:", err)),
+    carregarDadosGastos().catch(err => console.error("Erro em carregarDadosGastos:", err)),
+    carregarDadosGanhoGasto().catch(err => console.error("Erro em carregarDadosGanhoGasto:", err)),
+    carregarHistoricoGastos().catch(err => console.error("Erro em carregarHistoricoGastos:", err))
   ]).then(() => {
-    console.log('Todos os dados carregados com sucesso!');
+    console.log('Tentativas de carregamento concluídas');
+    ajustarTamanhoGraficos();
   }).catch(error => {
-    console.error('Erro ao carregar os dados:', error);
-    showNotification('Erro', 'Houve um problema ao carregar os dados.', 'error');
+    console.error('Erro geral ao carregar os dados:', error);
   });
 
-  // Adicione no final do arquivo CSS para as notificações
-  const style = document.createElement('style');
-  style.textContent = `
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      width: 300px;
-      padding: 0;
-      background-color: white;
-      border-radius: 8px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      transform: translateY(-20px);
-      opacity: 0;
-      transition: all 0.3s ease;
-      z-index: 1000;
-      overflow: hidden;
-    }
-    
-    .notification.show {
-      transform: translateY(0);
-      opacity: 1;
-    }
-    
-    .notification-header {
-      display: flex;
-      align-items: center;
-      padding: 12px 15px;
-      color: white;
-      font-weight: 600;
-    }
-    
-    .notification.success .notification-header {
-      background-color: #4caf50;
-    }
-    
-    .notification.error .notification-header {
-      background-color: #f44336;
-    }
-    
-    .notification-header i {
-      margin-right: 8px;
-    }
-    
-    .notification-header .close-notification {
-      margin-left: auto;
-      cursor: pointer;
-    }
-    
-    .notification-body {
-      padding: 15px;
-    }
-    
-    .notification-body p {
-      margin: 0;
-      font-size: 0.9rem;
-    }
-    
-    .confirming {
-      background-color: #ffeb3b !important;
-      color: #333 !important;
-    }
-    
-    tr {
-      transition: all 0.3s ease;
-      opacity: 0;
-      transform: translateY(20px);
-    }
-  `;
-  document.head.appendChild(style);
+  window.addEventListener('resize', ajustarTamanhoGraficos);
+
+  document.body.style.overflowX = 'hidden';
+  document.documentElement.style.overflowX = 'hidden';
+  document.body.style.maxWidth = '100vw';
+  document.documentElement.style.maxWidth = '100vw';
 });
-
-// Função para controlar o tamanho dos gráficos e evitar expansão infinita
-function ajustarTamanhoGraficos() {
-  // Obtém todos os elementos canvas
-  const canvasElements = document.querySelectorAll('canvas');
-  
-  // Define altura máxima para cada canvas
-  canvasElements.forEach(canvas => {
-    const parentHeight = canvas.parentElement.clientHeight;
-    const maxHeight = Math.min(parentHeight, 350);
-    canvas.style.maxHeight = `${maxHeight}px`;
-  });
-}
-
-// Executar ao carregar e quando a janela for redimensionada
-window.addEventListener('load', ajustarTamanhoGraficos);
-window.addEventListener('resize', ajustarTamanhoGraficos);
-
-// Garantir que o body não expanda além do necessário
-document.body.style.overflowX = 'hidden';
-document.documentElement.style.overflowX = 'hidden';
-
-// Definir tamanho máximo para o corpo do documento
-document.body.style.maxWidth = '100vw';
-document.documentElement.style.maxWidth = '100vw';

@@ -4,15 +4,16 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Meus Ganhos</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
   <link rel="stylesheet" href="assets/css/ganhos.css">
-  <link rel="stylesheet" href="assets/css/theme.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/theme_2.css">
 </head>
-<body>
+<body style="max-width: 100vw; overflow-x: hidden;">
   <!-- Sidebar (Menu Lateral) -->
   <div class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -44,35 +45,95 @@
   <!-- Overlay para quando o menu lateral estiver aberto -->
   <div class="overlay" id="overlay"></div>
   
-  <!-- Cabeçalho -->
+  <!-- Cabeçalho com efeito de partículas -->
+  <div class="particles-container">
+    <div id="particles-js"></div>
+  </div>
+  
   <header class="header-container">
-    <h1 class="animate__animated animate__fadeInDown">Meus Ganhos</h1>
+    <div class="header-content">
+      <div class="logo">
+        <i class="fas fa-money-bill-wave fa-bounce"></i>
+      </div>
+      <h1 class="title-text">Meus Ganhos</h1>
+      <p class="subtitle">Acompanhe sua renda e prosperidade</p>
+    </div>
   </header>
 
-  <!-- Barra de navegação -->
-  <div class="nav-container">
-    <a href="index.html" class="back-button">
-      <span class="material-icons">arrow_back</span>
-      Voltar ao Painel
-    </a>
-    <span class="material-icons settings-icon" id="settingsIcon">settings</span>
-  </div>
+  <!-- Menu de navegação -->
+  <nav class="menu-container">
+    <div class="menu-options">
+      <a href="index.html">
+        <i class="fas fa-home"></i> Início
+      </a>
+      <a href="meusganhos.html" class="active">
+        <i class="fas fa-chart-line"></i> Dashboard
+      </a>
+      <span id="settings-link">
+        <i class="fas fa-cog fa-spin"></i> Configurações
+      </span>
+      <span id="help-link">
+        <i class="fas fa-question-circle fa-pulse"></i> Ajuda
+      </span>
+    </div>
+  </nav>
 
   <!-- Grid dos Gráficos -->
-  <div class="charts-container">
-    <!-- Gráfico de ganhos por semana -->
-    <div class="chart-box animate__animated animate__fadeInLeft">
+  <div class="charts-grid">
+    <!-- Gráfico de ganhos -->
+    <div class="chart-box" data-aos="fade-up">
+      <div class="chart-header">
+        <i class="fas fa-chart-bar"></i>
+        <h3>Evolução dos Ganhos</h3>
+      </div>
       <canvas id="grafico-ganhos"></canvas>
     </div>
 
     <!-- Gráfico de diferença entre ganhos e gastos -->
-    <div class="chart-box animate__animated animate__fadeInRight">
+    <div class="chart-box" data-aos="fade-up" data-aos-delay="100">
+      <div class="chart-header">
+        <i class="fas fa-balance-scale"></i>
+        <h3>Comparativo Ganhos vs Gastos</h3>
+      </div>
       <canvas id="grafico-ganho-gasto"></canvas>
     </div>
   </div>
 
-  
-  <script src="assets/js/theme_meuganhos.js"></script>
+  <!-- Modal de Ajuda -->
+  <div id="help-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal">&times;</span>
+      <h2>Entendendo seus Ganhos</h2>
+      <div class="modal-body">
+        <p><strong>O que são Ganhos?</strong></p>
+        <p>Ganhos representam todas as entradas financeiras no seu orçamento, como salários, rendimentos, recebimentos extras e outras fontes de renda.</p>
+        
+        <p><strong>Tipos de Ganhos:</strong></p>
+        <ul>
+          <li><strong>Ganhos Fixos:</strong> Valores recebidos regularmente, como salários e pensões.</li>
+          <li><strong>Ganhos Variáveis:</strong> Valores que podem variar, como comissões e horas extras.</li>
+          <li><strong>Ganhos Eventuais:</strong> Valores recebidos ocasionalmente, como bônus e prêmios.</li>
+        </ul>
+        
+        <p><strong>Dicas para aumentar seus ganhos:</strong></p>
+        <ol>
+          <li>Invista em qualificação profissional</li>
+          <li>Diversifique suas fontes de renda</li>
+          <li>Busque oportunidades de renda extra</li>
+          <li>Negocie aumentos e promoções</li>
+          <li>Invista parte dos seus ganhos para gerar rendimentos passivos</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>© 2025 Meus Ganhos | Acompanhe sua prosperidade financeira</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+  <script src="assets/js/theme.js"></script>
   <script src="assets/js/ganhos.js"></script>
 </body>
 </html>

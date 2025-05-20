@@ -27,6 +27,7 @@ app.use(express.static(path.join(__dirname, "../frontend")));
 // Lista de tipos válidos
 const tiposValidos = ["ganhos", "gastos", "investimentos"];
 
+/*
 // Inserir novos gastos no banco
 app.post("/api/gastos", (req, res) => {
   const { preco, tipo } = req.body;
@@ -35,7 +36,7 @@ app.post("/api/gastos", (req, res) => {
     return res.status(400).json({ error: "Dados inválidos" });
   }
 
-  const query = `INSERT INTO novos_gastos (preco, tipo) VALUES (?, ?)`;
+  const query = `INSERT INTO gastos (valor, tipo) VALUES (?, ?)`;
   db.run(query, [preco, tipo], function (err) {
     if (err) {
       console.error("Erro ao inserir no banco de dados:", err.message);
@@ -44,6 +45,7 @@ app.post("/api/gastos", (req, res) => {
     res.status(201).json({ id: this.lastID });
   });
 });
+*/
 
 // Inserir valor no banco
 app.post("/api/:tipo", (req, res) => {
@@ -68,29 +70,22 @@ app.post("/api/:tipo", (req, res) => {
   });
 });
 
-// Obter valores agrupados por semana para gastos
-app.get("/api/gastos", (req, res) => {
-  const query = `SELECT tipo, SUM(preco) AS total FROM novos_gastos GROUP BY tipo ORDER BY tipo`;
-  db.all(query, [], (err, rows) => {
-    if (err) {
-      console.error("Erro ao buscar dados de novos_gastos:", err.message);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json(rows);
-  });
-});
 
-// Rota para obter o histórico de gastos
-app.get("/api/novos_gastos", (req, res) => {
-  const query = `SELECT id, preco, tipo FROM novos_gastos ORDER BY id DESC`;
+/*
+// Obter valores agrupados por tipo para gastos
+app.get("/api/gastos", (req, res) => {
+  const query = `SELECT tipo, SUM(valor) AS total FROM gastos GROUP BY tipo ORDER BY tipo`;
   db.all(query, [], (err, rows) => {
     if (err) {
-      console.error("Erro ao buscar dados de novos_gastos:", err.message);
+      console.error("Erro ao buscar dados de gastos:", err.message);
       return res.status(500).json({ error: err.message });
     }
     res.json(rows);
   });
 });
+*/
+
+
 
 // Obter valores agrupados por semana
 app.get("/api/:tipo", (req, res) => {
@@ -103,6 +98,27 @@ app.get("/api/:tipo", (req, res) => {
   const query = `SELECT semana, SUM(valor) AS total FROM ${tipo} GROUP BY semana ORDER BY semana`;
   db.all(query, [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
+    res.json(rows);
+  });
+});
+
+
+
+
+// Rota para obter o histórico de gastos e investimentos
+app.get("/api/gastos/historico", (req, res) => {
+  const query = `
+    SELECT id, valor, tipo, semana, 'gastos' AS origem FROM gastos
+    UNION ALL
+    SELECT id, valor, 'Investimento' AS tipo, semana, 'investimentos' AS origem FROM investimentos
+    ORDER BY semana DESC, id DESC
+  `;
+
+  db.all(query, [], (err, rows) => {
+    if (err) {
+      console.error("Erro ao buscar dados de histórico:", err.message);
+      return res.status(500).json({ error: err.message });
+    }
     res.json(rows);
   });
 });
@@ -123,19 +139,6 @@ app.delete('/api/:tipo/:id', (req, res) => {
     }
 
     res.json({ message: 'Registro excluído com sucesso.' });
-  });
-});
-
-// Rota para excluir um gasto
-app.delete('/api/novos_gastos/:id', (req, res) => {
-  const { id } = req.params;
-  const query = `DELETE FROM novos_gastos WHERE id = ?`;
-  db.run(query, [id], function (err) {
-    if (err) {
-      console.error('Erro ao excluir do banco de dados:', err.message);
-      return res.status(500).json({ error: err.message });
-    }
-    res.json({ message: 'Gasto excluído com sucesso.' });
   });
 });
 
@@ -166,21 +169,13 @@ app.get("/api/stocks/yahoo/:symbols", async (req, res) => {
     // URL correta para a API do Yahoo Finance via RapidAPI
     const url = `https://yahoo-finance15.p.rapidapi.com/api/yahoo/qu/quote/${symbols}`;
     
-    console.log("Fazendo requisição para a API do Yahoo Finance:", url);
     const response = await fetch(url, options);
     
     if (!response.ok) {
-      console.error(`Erro na API Yahoo: Status ${response.status}`);
-      
-      // Imprimir detalhes adicionais sobre o erro
-      const errorText = await response.text();
-      console.error("Detalhes do erro:", errorText);
-      
       throw new Error(`Erro na API: ${response.status}`);
     }
     
     const data = await response.json();
-    console.log("Dados recebidos da API do Yahoo Finance:", JSON.stringify(data).substring(0, 200) + "...");
     
     // Armazenar no cache
     apiCache[cacheKey] = {
@@ -190,11 +185,7 @@ app.get("/api/stocks/yahoo/:symbols", async (req, res) => {
     
     res.json(data);
   } catch (error) {
-    console.error("Erro ao buscar dados do Yahoo Finance:", error);
-    
-    // Fallback para dados estáticos
-    console.log("Usando fallback para dados estáticos");
-    res.json([]);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -227,75 +218,6 @@ app.get("/api/stocks/finnhub/quote", async (req, res) => {
     
     res.json(data);
   } catch (error) {
-    console.error("Erro ao buscar cotação do Finnhub:", error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Rota para buscar perfil da empresa via Finnhub
-app.get("/api/stocks/finnhub/stock/profile2", async (req, res) => {
-  try {
-    const { symbol } = req.query;
-    const cacheKey = `finnhub_profile_${symbol}`;
-    
-    // Verificar cache
-    if (apiCache[cacheKey] && Date.now() - apiCache[cacheKey].timestamp < CACHE_DURATION) {
-      return res.json(apiCache[cacheKey].data);
-    }
-    
-    const url = `https://finnhub.io/api/v1/stock/profile2?symbol=${symbol}&token=${FINNHUB_API_KEY}`;
-    
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error(`Erro na API Finnhub: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    // Armazenar no cache
-    apiCache[cacheKey] = {
-      timestamp: Date.now(),
-      data: data
-    };
-    
-    res.json(data);
-  } catch (error) {
-    console.error("Erro ao buscar perfil da empresa do Finnhub:", error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
-// Rota para buscar métricas fundamentais via Finnhub
-app.get("/api/stocks/finnhub/stock/metric", async (req, res) => {
-  try {
-    const { symbol, metric } = req.query;
-    const cacheKey = `finnhub_metric_${symbol}_${metric}`;
-    
-    // Verificar cache
-    if (apiCache[cacheKey] && Date.now() - apiCache[cacheKey].timestamp < CACHE_DURATION) {
-      return res.json(apiCache[cacheKey].data);
-    }
-    
-    const url = `https://finnhub.io/api/v1/stock/metric?symbol=${symbol}&metric=${metric}&token=${FINNHUB_API_KEY}`;
-    
-    const response = await fetch(url);
-    
-    if (!response.ok) {
-      throw new Error(`Erro na API Finnhub: ${response.status}`);
-    }
-    
-    const data = await response.json();
-    
-    // Armazenar no cache
-    apiCache[cacheKey] = {
-      timestamp: Date.now(),
-      data: data
-    };
-    
-    res.json(data);
-  } catch (error) {
-    console.error("Erro ao buscar métricas do Finnhub:", error);
     res.status(500).json({ error: error.message });
   }
 });

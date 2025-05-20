@@ -535,3 +535,185 @@ form button:active {
         font-size: 1.5rem;
     }
 }
+
+
+/* Estilo para a página de ganhos, semelhante à página de gastos */
+/* Particles.js container */
+.particles-container {
+  position: absolute;
+  width: 100%;
+  height: 300px;
+  z-index: -1;
+  overflow: hidden;
+}
+
+#particles-js {
+  width: 100%;
+  height: 100%;
+  background-color: #1c2e4a;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+/* Cabeçalho com ícone flutuante e descrição */
+.header-container {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 0;
+  background: linear-gradient(135deg, #1c2e4a, #061938);
+  color: white;
+  padding: 6vh 2vw;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.logo {
+  margin-bottom: 1rem;
+}
+
+.logo i {
+  font-size: 3rem;
+  color: #64b5f6;
+  animation: floating 3s ease-in-out infinite;
+}
+
+.title-text {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  opacity: 0.8;
+  margin-top: 0.5rem;
+}
+
+/* Menu de navegação com opções */
+.menu-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.2vh 2vw;
+  background: linear-gradient(to right, #061938, #0d47a1);
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.menu-options {
+  display: flex;
+  justify-content: center;
+  gap: 3vw;
+  font-size: 1rem;
+}
+
+.menu-options a, .menu-options span {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: white;
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 0.8rem 1.2rem;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.menu-options a.active {
+  background-color: rgba(255, 255, 255, 0.2);
+  font-weight: 600;
+}
+
+.menu-options a:hover, .menu-options span:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.menu-options i {
+  font-size: 1.2rem;
+}
+
+/* Grid de gráficos para layout organizado */
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: auto auto;
+  gap: 2rem;
+  padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.chart-box {
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: slideInFromCenter 1s ease-out;
+  min-height: 350px;
+  max-height: 450px;
+  height: auto;
+  width: 100%;
+}
+
+.chart-box:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.chart-header i {
+  font-size: 1.5rem;
+  margin-right: 0.8rem;
+  color: #0d47a1;
+}
+
+.chart-header h3 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+  color: #333;
+}
+
+/* Tabela de histórico */
+.table-box {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  height: auto;
+  min-height: 400px;
+}
+
+#historico-container {
+  width: 100%;
+  max-height: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}

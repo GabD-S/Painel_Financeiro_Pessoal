@@ -290,4 +290,333 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Carregar dados assim que a página carrega
     preencherAcoesDisponiveis();
+
+    // Configuração das partículas no cabeçalho
+    if (typeof particlesJS !== 'undefined') {
+        particlesJS("particles-js", {
+            "particles": {
+                "number": {"value": 80, "density": {"enable": true, "value_area": 800}},
+                "color": {"value": "#ffffff"},
+                "shape": {"type": "circle", "stroke": {"width": 0, "color": "#000000"}},
+                "opacity": {"value": 0.5, "random": false},
+                "size": {"value": 3, "random": true},
+                "line_linked": {
+                    "enable": true,
+                    "distance": 150,
+                    "color": "#ffffff",
+                    "opacity": 0.4,
+                    "width": 1
+                },
+                "move": {
+                    "enable": true,
+                    "speed": 2,
+                    "direction": "none",
+                    "random": false,
+                    "straight": false,
+                    "out_mode": "out",
+                    "bounce": false
+                }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": {
+                    "onhover": {"enable": true, "mode": "grab"},
+                    "onclick": {"enable": true, "mode": "push"},
+                    "resize": true
+                }
+            },
+            "retina_detect": true
+        });
+    }
+
+    // Controle da Sidebar
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const settingsLink = document.getElementById('settings-link');
+    const closeSidebar = document.querySelector('.close-sidebar');
+    
+    // Abrir sidebar ao clicar no ícone de configurações
+    if (settingsLink) {
+        settingsLink.addEventListener('click', function() {
+            sidebar.classList.add('active');
+            overlay.classList.add('active');
+        });
+    }
+    
+    // Fechar sidebar ao clicar no X
+    if (closeSidebar) {
+        closeSidebar.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }
+    
+    // Fechar sidebar ao clicar no overlay
+    if (overlay) {
+        overlay.addEventListener('click', function() {
+            sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }
+
+    // Modal de ajuda
+    const helpLink = document.getElementById('help-link');
+    const helpModal = document.getElementById('help-modal');
+    const closeModalBtns = document.querySelectorAll('.close-modal');
+    
+    if (helpLink && helpModal) {
+        helpLink.addEventListener('click', function() {
+            helpModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+    }
+    
+    // Botão flutuante para adicionar investimento
+    const addBtn = document.getElementById('btn-add-investment');
+    const investModal = document.getElementById('modal-investimento');
+    
+    if (addBtn && investModal) {
+        addBtn.addEventListener('click', function() {
+            investModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+    }
+    
+    // Fechar modais
+    closeModalBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+            document.body.style.overflow = '';
+        });
+    });
+    
+    // Fechar modal ao clicar fora dele
+    window.addEventListener('click', function(event) {
+        if (event.target.classList.contains('modal')) {
+            event.target.style.display = 'none';
+            document.body.style.overflow = '';
+        }
+    });
+
+    // Botões de cancelar no formulário
+    const cancelBtns = document.querySelectorAll('.btn-cancel');
+    cancelBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.style.display = 'none';
+            });
+            document.body.style.overflow = '';
+        });
+    });
+
+    // Tema escuro
+    const themeToggle = document.getElementById('themeToggle');
+    
+    if (themeToggle) {
+        // Verificar se há uma preferência salva
+        const darkMode = localStorage.getItem('darkMode') === 'true';
+        
+        // Aplicar tema inicial
+        if (darkMode) {
+            document.body.classList.add('dark-theme');
+            themeToggle.checked = true;
+        }
+        
+        // Alternar tema
+        themeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('dark-theme');
+                localStorage.setItem('darkMode', 'true');
+            } else {
+                document.body.classList.remove('dark-theme');
+                localStorage.setItem('darkMode', 'false');
+            }
+        });
+    }
+
+    // Simulação de dados para os gráficos (em produção, esses dados viriam da API)
+    const carregarGraficoDistribuicao = () => {
+        const ctx = document.getElementById('investment-chart').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Bitcoin', 'Ações', 'Fundos Imobiliários', 'Renda Fixa'],
+                datasets: [{
+                    data: [30, 25, 20, 25],
+                    backgroundColor: [
+                        'rgba(255, 159, 64, 0.8)',
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(153, 102, 255, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 159, 64)',
+                        'rgb(54, 162, 235)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right',
+                    }
+                }
+            }
+        });
+    };
+
+    const carregarGraficoRendimentos = () => {
+        const ctx = document.getElementById('grafico-rendimentos').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul'],
+                datasets: [{
+                    label: 'Rendimento Mensal',
+                    data: [12, 19, 3, 5, 2, 3, 15],
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    };
+
+    const carregarGraficoPerformance = () => {
+        const ctx = document.getElementById('grafico-performance').getContext('2d');
+        
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['Bitcoin', 'Ações', 'FIIs', 'Renda Fixa', 'IBOVESPA', 'CDI'],
+                datasets: [{
+                    label: 'Rentabilidade Anual (%)',
+                    data: [120, 15, 8, 9, 12, 6],
+                    backgroundColor: [
+                        'rgba(255, 159, 64, 0.7)',
+                        'rgba(54, 162, 235, 0.7)',
+                        'rgba(75, 192, 192, 0.7)',
+                        'rgba(153, 102, 255, 0.7)',
+                        'rgba(201, 203, 207, 0.7)',
+                        'rgba(255, 99, 132, 0.7)'
+                    ],
+                    borderColor: [
+                        'rgb(255, 159, 64)',
+                        'rgb(54, 162, 235)',
+                        'rgb(75, 192, 192)',
+                        'rgb(153, 102, 255)',
+                        'rgb(201, 203, 207)',
+                        'rgb(255, 99, 132)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    };
+
+    // Função para carregar dados simulados na tabela
+    const carregarTabela = () => {
+        const dados = [
+            { data: '2023-01-15', quantidade: 0.05, precoCompra: 32000, valorAtual: 35000 },
+            { data: '2023-02-20', quantidade: 0.03, precoCompra: 35000, valorAtual: 35000 },
+            { data: '2023-03-10', quantidade: 0.02, precoCompra: 38000, valorAtual: 35000 },
+        ];
+
+        const tbody = document.querySelector('#table-btc tbody');
+        if (!tbody) return;
+        
+        tbody.innerHTML = '';
+
+        let totalInvestido = 0;
+        let totalAtual = 0;
+
+        dados.forEach(item => {
+            const valorInvestido = item.quantidade * item.precoCompra;
+            const valorAtualItem = item.quantidade * item.valorAtual;
+            const lucro = valorAtualItem - valorInvestido;
+            const percentual = (lucro / valorInvestido) * 100;
+
+            totalInvestido += valorInvestido;
+            totalAtual += valorAtualItem;
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${new Date(item.data).toLocaleDateString()}</td>
+                <td>${item.quantidade.toFixed(8)}</td>
+                <td>$${item.precoCompra.toFixed(2)}</td>
+                <td>$${item.valorAtual.toFixed(2)}</td>
+                <td class="${percentual >= 0 ? 'profit' : 'loss'}">${percentual.toFixed(2)}%</td>
+                <td class="action-cell">
+                    <button class="action-btn edit-btn" title="Editar">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="action-btn delete-btn" title="Excluir">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        const totalInvestidoEl = document.getElementById('total-investido');
+        const totalAtualEl = document.getElementById('total-atual');
+        const margemMediaEl = document.getElementById('margem-media');
+        
+        if (totalInvestidoEl) totalInvestidoEl.textContent = `$${totalInvestido.toFixed(2)}`;
+        if (totalAtualEl) totalAtualEl.textContent = `$${totalAtual.toFixed(2)}`;
+        
+        if (margemMediaEl) {
+            const lucroTotal = totalAtual - totalInvestido;
+            const percentualTotal = (lucroTotal / totalInvestido) * 100;
+            margemMediaEl.textContent = `${percentualTotal.toFixed(2)}%`;
+            margemMediaEl.className = percentualTotal >= 0 ? 'profit' : 'loss';
+        }
+    };
+
+    // Inicializar a página
+    carregarGraficoDistribuicao();
+    carregarGraficoRendimentos();
+    carregarGraficoPerformance();
+    carregarTabela();
+
+    // Formulário para adicionar investimento
+    const formInvestimento = document.getElementById('form-investimento');
+    if (formInvestimento) {
+        formInvestimento.addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Aqui você adicionaria lógica para salvar o investimento
+            alert('Investimento adicionado com sucesso!');
+            document.getElementById('modal-investimento').style.display = 'none';
+            document.body.style.overflow = '';
+            // Recarregar dados
+            carregarTabela();
+        });
+    }
+    
+    // Rolar até a seção de histórico ao clicar no link
+    const historicoLink = document.getElementById('historico-link');
+    const historicoSection = document.getElementById('historico-section');
+    
+    if (historicoLink && historicoSection) {
+        historicoLink.addEventListener('click', function() {
+            historicoSection.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
 });
