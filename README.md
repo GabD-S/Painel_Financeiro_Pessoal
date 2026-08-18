@@ -94,9 +94,3 @@
 
 Este projeto está licenciado sob a [Licença MIT](./LICENSE).
 
----
-
-## 📬 Contato
-
-Desenvolvido por **Seu Nome**  
-[LinkedIn](https://linkedin.com/in/seu-perfil) • [Portfólio](https://seuportfolio.com)
